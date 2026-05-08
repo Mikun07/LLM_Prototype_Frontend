@@ -5,11 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
-    "test": "vitest"
+    "test": "vitest",
+    "version:current": "git describe --tags --always --dirty",
+    "version:list": "git tag --list",
+    "version:use": "powershell -ExecutionPolicy Bypass -File ./scripts/use-version.ps1"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.3.0",
