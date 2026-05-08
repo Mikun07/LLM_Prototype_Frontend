@@ -1,0 +1,7 @@
+id,text,domain,type,project
+REQ-001,The system may allow users to reset passwords using email or SMS,Authentication,FR,ReqSmell Demo
+REQ-002,The system shall not expose account recovery tokens in logs,Authentication,NFR,ReqSmell Demo
+REQ-003,The dashboard should load fast for files up to five thousand rows,Analytics,NFR,ReqSmell Demo
+REQ-004,The system shall export analysis results as CSV,Reporting,FR,ReqSmell Demo
+REQ-005,The report view must never store requirement data in browser storage,Security,NFR,ReqSmell Demo
+

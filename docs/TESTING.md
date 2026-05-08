@@ -4,8 +4,9 @@ This guide explains how to prove the version-1 frontend environment is healthy.
 
 ## Test Philosophy
 
-Version 1 is an environment baseline. Its current test suite is intentionally small, but
-the full testing toolchain is installed and working.
+Version 2 is the first interface baseline. Its test suite covers starter utilities,
+CSV parsing, and deterministic report generation. The full testing toolchain is installed
+and ready for component and hook coverage as the product grows.
 
 As features are added, tests should grow in these areas:
 
@@ -122,7 +123,7 @@ What it does:
 | `found 0 vulnerabilities` | Dependency tree is clean |
 | Moderate, high, or critical findings | A dependency should be upgraded or reviewed |
 
-Version 1 currently expects:
+Version 2 currently expects:
 
 ```text
 found 0 vulnerabilities
@@ -193,4 +194,3 @@ Do not call the real backend in tests. Mock API calls instead.
 | Tests fail after dependency switch | Run `npm ci` |
 | Build fails after switching versions | Run `npm run version:use -- -Latest -CleanIgnored -Install` |
 | Audit finds vulnerabilities | Check whether they are production or dev dependencies before upgrading |
-

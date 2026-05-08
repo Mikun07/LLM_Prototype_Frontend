@@ -3,15 +3,14 @@
 This guide explains how this project supports upgrade, downgrade, clean-slate restore, and
 future version releases.
 
-The project is still version 1:
+The current project version is:
 
 ```text
-package.json version: 1.0.0
-stable Git tag: v1.0.0
+package.json version: 2.0.0
+stable Git tag: v2.0.0
 ```
 
-Documentation can improve on `main` without creating a new product version. A new product
-version is created only when the package version is changed and a new Git tag is made.
+Version 1 remains available as `v1.0.0` for rollback.
 
 ## Why Versioning Exists
 
@@ -32,7 +31,7 @@ For this project, Git tags are the clean checkpoints.
 | Repository | The project folder tracked by Git |
 | Commit | A saved snapshot of tracked files |
 | Branch | A movable line of development, such as `main` |
-| Tag | A named fixed checkpoint, such as `v1.0.0` |
+| Tag | A named fixed checkpoint, such as `v2.0.0` |
 | Detached HEAD | Viewing an exact tag or commit instead of editing on a branch |
 | Clean tree | No uncommitted tracked or untracked files |
 | Ignored files | Generated files that Git intentionally does not track |
@@ -42,7 +41,8 @@ For this project, Git tags are the clean checkpoints.
 | Item | Meaning |
 |---|---|
 | `main` | Latest accepted project state |
-| `v1.0.0` | Stable version-one snapshot |
+| `v2.0.0` | Current interface snapshot |
+| `v1.0.0` | Original environment baseline |
 | `docs/versions/vX.Y.Z.md` | Detailed document for a version |
 | `package.json` version | npm project version for the current stable version |
 | `package-lock.json` | Exact dependency versions for reproducible installs |
@@ -53,12 +53,12 @@ This project uses semantic versioning.
 
 | Change type | Example | Use when |
 |---|---|---|
-| Patch | `1.0.0` to `1.0.1` | Bug fixes, small docs, small internal improvements |
-| Minor | `1.0.0` to `1.1.0` | Backward-compatible features |
-| Major | `1.0.0` to `2.0.0` | Breaking architecture, API, workflow, or data changes |
+| Patch | `2.0.0` to `2.0.1` | Bug fixes, small docs, small internal improvements |
+| Minor | `2.0.0` to `2.1.0` | Backward-compatible features |
+| Major | `1.0.0` to `2.0.0` | Breaking architecture, API, workflow, or product-scope changes |
 
-Because the user asked to keep this as version 1, the current documentation improvements
-do not change `1.0.0`.
+Version 2 is a major version because it changes the project from an environment baseline
+into a usable frontend interface.
 
 ## Available Version Commands
 
@@ -74,19 +74,25 @@ Show current tag or commit:
 npm run version:current
 ```
 
-Switch to version 1:
+Switch to version 2:
 
 ```powershell
-npm run version:use -- -Version v1.0.0
+npm run version:use -- -Version v2.0.0
 ```
 
-Switch to version 1 and reinstall dependencies:
+Switch to version 2 and reinstall dependencies:
 
 ```powershell
-npm run version:use -- -Version v1.0.0 -Install
+npm run version:use -- -Version v2.0.0 -Install
 ```
 
-Switch to version 1, remove ignored generated files, and reinstall dependencies:
+Switch to version 2, remove ignored generated files, and reinstall dependencies:
+
+```powershell
+npm run version:use -- -Version v2.0.0 -CleanIgnored -Install
+```
+
+Rollback to version 1:
 
 ```powershell
 npm run version:use -- -Version v1.0.0 -CleanIgnored -Install
@@ -98,16 +104,16 @@ Return to latest `main`:
 npm run version:use -- -Latest -Install
 ```
 
-Create an editable branch from version 1:
+Create an editable branch from version 2:
 
 ```powershell
-npm run version:use -- -Version v1.0.0 -Branch work/from-v1.0.0 -Install
+npm run version:use -- -Version v2.0.0 -Branch work/from-v2.0.0 -Install
 ```
 
 Dry-run a version switch:
 
 ```powershell
-npm run version:use -- -Version v1.0.0 -WhatIf
+npm run version:use -- -Version v2.0.0 -WhatIf
 ```
 
 ## Version Script Options
@@ -137,13 +143,13 @@ from being overwritten during a version switch.
 
 ## Clean Slate Workflows
 
-### Clean Slate For Version 1
+### Clean Slate For Version 2
 
-Use this when you want the project to match version 1 and remove generated files:
+Use this when you want the project to match version 2 and remove generated files:
 
 ```powershell
 git status
-npm run version:use -- -Version v1.0.0 -CleanIgnored -Install
+npm run version:use -- -Version v2.0.0 -CleanIgnored -Install
 ```
 
 What happens:
@@ -151,7 +157,7 @@ What happens:
 | Step | Action |
 |---|---|
 | Check Git state | Script refuses to continue if work is unsaved |
-| Switch version | Git checks out `v1.0.0` |
+| Switch version | Git checks out `v2.0.0` |
 | Clean ignored files | `node_modules`, `dist`, logs, and caches are removed |
 | Install dependencies | `npm ci` installs from the lockfile |
 
@@ -187,12 +193,12 @@ Run `git status` first.
 
 ## Safe Upgrade Workflow
 
-Use this when moving from an older version to latest `main`.
+Use this when moving from version 1 to version 2.
 
 ```powershell
 git status
 git fetch origin --tags --prune
-npm run version:use -- -Latest -Install
+npm run version:use -- -Version v2.0.0 -Install
 npm run type-check
 npm run lint
 npm run test -- --run
@@ -247,7 +253,7 @@ git switch -c feature/version-work
 Example:
 
 ```json
-"version": "1.1.0"
+"version": "2.1.0"
 ```
 
 5. Sync the lockfile.
@@ -259,7 +265,7 @@ npm install --package-lock-only
 6. Create version documentation.
 
 ```powershell
-Copy-Item docs\versions\TEMPLATE.md docs\versions\v1.1.0.md
+Copy-Item docs\versions\TEMPLATE.md docs\versions\v2.1.0.md
 ```
 
 7. Fill in the version document.
@@ -280,20 +286,20 @@ npm run build
 
 ```powershell
 git add .
-git commit -m "Release v1.1.0"
+git commit -m "Release v2.1.0"
 ```
 
 11. Tag.
 
 ```powershell
-git tag -a v1.1.0 -m "Version 1.1.0"
+git tag -a v2.1.0 -m "Version 2.1.0"
 ```
 
 12. Push.
 
 ```powershell
 git push origin main
-git push origin v1.1.0
+git push origin v2.1.0
 ```
 
 ## Version Document Requirements
@@ -313,17 +319,4 @@ Each version document must include:
 | Known limitations | What is missing or risky |
 | Upgrade notes | What changed from the previous version |
 | Downgrade notes | What to know before returning to an older version |
-
-## Relationship Between Tags And Docs
-
-Version 1 was tagged before the expanded documentation was added. That means:
-
-| Item | Meaning |
-|---|---|
-| `v1.0.0` tag | Exact original version-one code snapshot |
-| `main` after documentation updates | Same product version with better manuals |
-| `docs/versions/v1.0.0.md` | Human-readable description of version one |
-
-This is acceptable because the user requested better documentation while keeping the
-project as version 1.
 

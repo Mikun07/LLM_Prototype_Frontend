@@ -51,6 +51,9 @@ const analysisSlice = createSlice({
       state.runId = action.payload.runId
       state.status = 'running'
       state.error = null
+      state.claudeReport = null
+      state.chatgptReport = null
+      state.comparison = null
       state.progress = createProgressState()
     },
     updateProgress(
@@ -107,4 +110,3 @@ export const {
 } = analysisSlice.actions
 
 export const analysisReducer = analysisSlice.reducer
-

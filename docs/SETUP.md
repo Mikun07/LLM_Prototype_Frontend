@@ -18,8 +18,9 @@ The frontend is a browser application built with:
 | jsPDF and html2canvas | Future client-side PDF report generation |
 | Vitest | Unit and component test runner |
 
-Version 1 is a verified baseline. It is ready for feature development, testing, version
-switching, and GitHub work.
+Version 2 is the first usable interface. It is ready for CSV upload preview, configuration
+review, run progress preview, dashboard review, testing, version switching, and GitHub
+work.
 
 ## Required Software
 
@@ -98,6 +99,24 @@ Ctrl+C
 
 If port `5173` is already busy, Vite may choose another port. Use the URL printed in the
 terminal.
+
+## Try The Interface
+
+Use the included sample file:
+
+```text
+examples/sample-requirements.csv
+```
+
+Workflow:
+
+1. Upload the CSV.
+2. Confirm the detected columns and preview rows.
+3. Continue to Configure.
+4. Check Configuration reviewed.
+5. Run Analysis.
+6. Review Claude, ChatGPT, and Comparison dashboard tabs.
+7. Use CSV buttons to export report tables.
 
 ## Run A Production Build
 
@@ -204,4 +223,3 @@ Check before committing:
 ```powershell
 git status --short --ignored
 ```
-

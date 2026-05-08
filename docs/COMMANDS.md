@@ -27,11 +27,12 @@ This document explains every project command in plain language.
 |---|---|
 | `npm run version:list` | Lists all available Git version tags |
 | `npm run version:current` | Shows the nearest Git tag, commit, and dirty state |
-| `npm run version:use -- -Version v1.0.0` | Switches to the `v1.0.0` tag in detached mode |
-| `npm run version:use -- -Version v1.0.0 -Install` | Switches to `v1.0.0` and runs `npm ci` |
-| `npm run version:use -- -Version v1.0.0 -CleanIgnored -Install` | Restores a clean version-1 slate and dependencies |
+| `npm run version:use -- -Version v2.0.0` | Switches to the `v2.0.0` tag in detached mode |
+| `npm run version:use -- -Version v2.0.0 -Install` | Switches to `v2.0.0` and runs `npm ci` |
+| `npm run version:use -- -Version v2.0.0 -CleanIgnored -Install` | Restores a clean version-2 slate and dependencies |
+| `npm run version:use -- -Version v1.0.0 -CleanIgnored -Install` | Rolls back to the version-1 environment baseline |
 | `npm run version:use -- -Latest -Install` | Switches back to `main` and installs dependencies |
-| `npm run version:use -- -Version v1.0.0 -Branch work/from-v1.0.0` | Creates an editable branch from version 1 |
+| `npm run version:use -- -Version v2.0.0 -Branch work/from-v2.0.0` | Creates an editable branch from version 2 |
 
 ## Git Commands
 
@@ -41,11 +42,11 @@ This document explains every project command in plain language.
 | `git log --oneline --decorate -5` | Shows recent commits and tags |
 | `git fetch origin --tags --prune` | Updates remote branches and version tags |
 | `git switch main` | Moves to the main branch |
-| `git switch --detach v1.0.0` | Views version 1 exactly as tagged |
-| `git switch -c branch-name v1.0.0` | Creates a new editable branch from version 1 |
+| `git switch --detach v2.0.0` | Views version 2 exactly as tagged |
+| `git switch -c branch-name v2.0.0` | Creates a new editable branch from version 2 |
 | `git tag --list` | Lists version tags |
 | `git push origin main` | Pushes the main branch to GitHub |
-| `git push origin v1.0.0` | Pushes the version-one tag to GitHub |
+| `git push origin v2.0.0` | Pushes the version-two tag to GitHub |
 
 ## Script Details
 
@@ -94,11 +95,11 @@ npm run lint
 npm run test -- --run
 ```
 
-For a clean version-one restore:
+For a clean version-two restore:
 
 ```powershell
 git status
-npm run version:use -- -Version v1.0.0 -CleanIgnored -Install
+npm run version:use -- -Version v2.0.0 -CleanIgnored -Install
 ```
 
 For returning to latest work:
@@ -106,4 +107,3 @@ For returning to latest work:
 ```powershell
 npm run version:use -- -Latest -Install
 ```
-

@@ -129,7 +129,7 @@ After the tree is clean, run the version command again.
 This is normal when using:
 
 ```powershell
-npm run version:use -- -Version v1.0.0
+npm run version:use -- -Version v2.0.0
 ```
 
 Detached mode means you are viewing the exact version snapshot.
@@ -137,7 +137,7 @@ Detached mode means you are viewing the exact version snapshot.
 If you want to edit from that version, create a branch:
 
 ```powershell
-npm run version:use -- -Version v1.0.0 -Branch work/from-v1.0.0 -Install
+npm run version:use -- -Version v2.0.0 -Branch work/from-v2.0.0 -Install
 ```
 
 ## Generated files appear in the project root
@@ -180,4 +180,3 @@ npm ci
 ```
 
 `git reset --hard` discards tracked local changes.
-

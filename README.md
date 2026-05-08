@@ -1,14 +1,14 @@
 # ReqSmell Frontend
 
-Version 1 of the ReqSmell frontend environment.
+Version 2 of the ReqSmell frontend.
 
-This repository contains the web client setup for the ReqSmell requirements smell
-detection prototype. It is a React, TypeScript, Vite, Redux Toolkit, Tailwind CSS,
-Recharts, jsPDF, and Vitest project.
+This repository contains the web client for the ReqSmell requirements smell detection
+prototype. It is built with React, TypeScript, Vite, Redux Toolkit, Tailwind CSS,
+Recharts, jsPDF, and Vitest.
 
-Version 1 is an environment and architecture baseline. It gives future developers a clean,
-verified starting point with project scripts, testing tools, version switching, and GitHub
-version-control workflow already in place.
+Version 2 adds the first usable interface on top of the version-1 environment baseline:
+CSV upload and preview, fixed run configuration, progress view, report dashboard, charts,
+tables, filters, pagination, and CSV export.
 
 ## Start Here
 
@@ -21,7 +21,8 @@ If you are new to this project, read these documents in order:
 | [docs/TESTING.md](docs/TESTING.md) | Running checks and understanding what each test command proves |
 | [docs/VERSIONING.md](docs/VERSIONING.md) | Upgrading, downgrading, restoring clean slates, and creating future versions |
 | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Fixing common setup, npm, Git, Vite, and Windows issues |
-| [docs/versions/v1.0.0.md](docs/versions/v1.0.0.md) | Full documentation for version 1 |
+| [docs/versions/v2.0.0.md](docs/versions/v2.0.0.md) | Full documentation for version 2 |
+| [docs/versions/v1.0.0.md](docs/versions/v1.0.0.md) | Rollback documentation for version 1 |
 
 ## Quick Setup
 
@@ -42,6 +43,12 @@ http://127.0.0.1:5173/
 
 Stop the dev server with `Ctrl+C` in the terminal where it is running.
 
+You can test the interface with:
+
+```text
+examples/sample-requirements.csv
+```
+
 ## Verify The Project
 
 Run these commands before making a pull request or creating a new version:
@@ -54,7 +61,7 @@ npm audit
 npm run build
 ```
 
-All five should pass for a clean version-1 environment.
+All five should pass for a clean version-2 interface.
 
 ## Version Commands
 
@@ -70,7 +77,13 @@ Show the current version or commit:
 npm run version:current
 ```
 
-Restore the version-1 clean slate:
+Restore the version-2 clean slate after the `v2.0.0` tag exists:
+
+```powershell
+npm run version:use -- -Version v2.0.0 -CleanIgnored -Install
+```
+
+Rollback to version 1:
 
 ```powershell
 npm run version:use -- -Version v1.0.0 -CleanIgnored -Install
@@ -82,23 +95,23 @@ Return to the latest `main` branch:
 npm run version:use -- -Latest -Install
 ```
 
-## Important Version-1 Notes
+## Important Version-2 Notes
 
-The npm project version remains:
-
-```text
-1.0.0
-```
-
-The stable version-one Git tag remains:
+The npm project version is:
 
 ```text
-v1.0.0
+2.0.0
 ```
 
-The documentation on `main` may continue to improve while still describing version 1.
-That does not create a new product version unless the package version and Git tag are
-intentionally changed.
+The stable version-two Git tag is:
+
+```text
+v2.0.0
+```
+
+Version 2 contains deterministic frontend preview reports so the dashboard interface can
+be reviewed before live backend result integration is completed. It does not call any LLM
+API from the browser and does not store uploaded requirement data in browser storage.
 
 ## Project Structure
 
@@ -106,9 +119,12 @@ intentionally changed.
 |---|---|
 | `src/` | Frontend source code |
 | `src/api/` | Backend API client boundary |
+| `src/components/` | Custom reusable UI, chart, wizard, and dashboard components |
+| `src/constants/` | Shared application constants |
+| `src/hooks/` | Custom reusable hooks |
 | `src/store/` | Redux Toolkit store and slices |
 | `src/types/` | Shared TypeScript domain types |
-| `src/utils/` | Reusable utility functions |
+| `src/utils/` | CSV parsing, formatting, and report-preview utilities |
 | `__tests__/` | Vitest test files |
 | `docs/` | Setup, testing, command, troubleshooting, and versioning guides |
 | `scripts/` | Local helper scripts, including version switching |
@@ -117,7 +133,7 @@ intentionally changed.
 
 ## Backend Assumption
 
-The frontend expects the backend API to be available at:
+The frontend API boundary expects the backend API to be available at:
 
 ```text
 http://localhost:8000
@@ -125,4 +141,3 @@ http://localhost:8000
 
 During local development, Vite forwards frontend `/api/*` requests to the backend through
 the proxy configured in `vite.config.ts`.
-

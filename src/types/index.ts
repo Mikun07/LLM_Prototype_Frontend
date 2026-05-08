@@ -26,6 +26,14 @@ export interface FileMetadata {
   rowCount: number
 }
 
+export interface ColumnDetection {
+  id: boolean
+  text: boolean
+  domain: boolean
+  type: boolean
+  project: boolean
+}
+
 export interface RequirementRow {
   id: string
   text: string
@@ -38,11 +46,24 @@ export interface ParsedFile {
   metadata: FileMetadata
   rows: RequirementRow[]
   detectedColumns: string[]
+  detection: ColumnDetection
 }
 
 export interface RunConfig {
   temperature: number
   maxGroupSize: number
+}
+
+export interface CsvParseResult {
+  parsedFile: ParsedFile | null
+  error: string | null
+}
+
+export interface PipelineInfo {
+  key: PipelineKey
+  model: ModelName
+  smellType: SmellType
+  label: string
 }
 
 export interface PipelineProgress {
@@ -151,4 +172,3 @@ export interface RunStatusResponse {
   chatgptReport: ModelReport | null
   comparison: ComparisonReport | null
 }
-

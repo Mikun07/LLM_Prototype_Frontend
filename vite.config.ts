@@ -3,6 +3,20 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    chunkSizeWarningLimit: 800,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/recharts')) {
+            return 'charts'
+          }
+
+          return undefined
+        },
+      },
+    },
+  },
   server: {
     port: 5173,
     proxy: {
