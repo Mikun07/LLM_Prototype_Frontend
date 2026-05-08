@@ -6,6 +6,13 @@ import { Badge } from '../shared/Badge'
 import { Button } from '../shared/Button'
 import { ProgressBar } from '../shared/ProgressBar'
 
+const pipelineCardStyles = [
+  'border-brand-200 bg-gradient-to-br from-brand-50 to-white',
+  'border-accent-100 bg-gradient-to-br from-accent-50 to-white',
+  'border-teal-100 bg-gradient-to-br from-teal-50 to-white',
+  'border-indigo-100 bg-gradient-to-br from-indigo-50 to-white',
+]
+
 export function RunStep() {
   const dispatch = useAppDispatch()
   const progress = useAppSelector((state) => state.analysis.progress)
@@ -14,25 +21,27 @@ export function RunStep() {
 
   return (
     <section className="flex flex-col gap-6">
-      <div className="rounded border border-border bg-white p-5">
+      <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+        <p className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-400">Overall progress</p>
         <ProgressBar label="Overall progress" value={overall} />
+        <p className="mt-2 text-right font-mono text-2xl font-bold text-brand-600">{overall}%</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        {pipelines.map((pipeline) => {
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {pipelines.map((pipeline, i) => {
           const pipelineProgress = progress[pipeline.key]
 
           return (
-            <div className="rounded border border-border bg-white p-5" key={pipeline.key}>
+            <div className={['rounded-2xl border p-5 shadow-sm', pipelineCardStyles[i]].join(' ')} key={pipeline.key}>
               <div className="mb-4 flex items-center justify-between gap-4">
-                <h2 className="font-display text-lg font-semibold text-brand-900">
+                <h2 className="font-display text-base font-bold text-slate-800">
                   {pipeline.label}
                 </h2>
                 <Badge value={pipelineProgress.status} />
               </div>
               <ProgressBar label={pipeline.label} value={pipelineProgress.percentage} />
-              <p className="mt-3 font-mono text-sm text-slate-600">
-                {pipelineProgress.processed}/{pipelineProgress.total}
+              <p className="mt-3 font-mono text-sm font-semibold text-slate-500">
+                {pipelineProgress.processed} / {pipelineProgress.total} requirements
               </p>
             </div>
           )

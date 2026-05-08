@@ -10,7 +10,7 @@ import { ReportHeader } from './ReportHeader'
 import { ResultsSection } from './ResultsSection'
 
 interface ComparisonReportProps {
-  report: ComparisonReportType
+  readonly report: ComparisonReportType
 }
 
 const comparisonColumns: DataTableColumn<ComparisonRow>[] = [

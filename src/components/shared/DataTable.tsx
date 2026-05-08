@@ -3,19 +3,19 @@ import type { ReactNode } from 'react'
 import { Button } from './Button'
 
 export interface DataTableColumn<T> {
-  key: keyof T | string
-  header: string
-  render: (row: T) => ReactNode
-  sortableValue?: (row: T) => string | number
+  readonly key: keyof T | string
+  readonly header: string
+  readonly render: (row: T) => ReactNode
+  readonly sortableValue?: (row: T) => string | number
 }
 
 interface DataTableProps<T> {
-  rows: T[]
-  columns: DataTableColumn<T>[]
-  getRowKey: (row: T, index: number) => string
-  sortKey: string | null
-  sortDirection: 'asc' | 'desc'
-  onSort: (key: string) => void
+  readonly rows: T[]
+  readonly columns: DataTableColumn<T>[]
+  readonly getRowKey: (row: T, index: number) => string
+  readonly sortKey: string | null
+  readonly sortDirection: 'asc' | 'desc'
+  readonly onSort: (key: string) => void
 }
 
 export function DataTable<T>({

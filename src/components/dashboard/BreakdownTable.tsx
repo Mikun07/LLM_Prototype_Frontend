@@ -2,8 +2,8 @@ import type { BreakdownValue } from '../../types'
 import { formatPercentage } from '../../utils/formatters'
 
 interface BreakdownTableProps {
-  title: string
-  rows: BreakdownValue[]
+  readonly title: string
+  readonly rows: BreakdownValue[]
 }
 
 export function BreakdownTable({ rows, title }: BreakdownTableProps) {

@@ -7,20 +7,27 @@ import { Button } from '../shared/Button'
 import { DataTable, type DataTableColumn } from '../shared/DataTable'
 
 interface ResultsSectionProps<T extends object> {
-  title: string
-  rows: T[]
-  columns: DataTableColumn<T>[]
-  searchFields: (keyof T)[]
-  filterKeys: (keyof T)[]
-  filename: string
-  getRowKey: (row: T, index: number) => string
+  readonly title: string
+  readonly rows: T[]
+  readonly columns: DataTableColumn<T>[]
+  readonly searchFields: (keyof T)[]
+  readonly filterKeys: (keyof T)[]
+  readonly filename: string
+  readonly getRowKey: (row: T, index: number) => string
+}
+
+function cellToString(value: unknown): string {
+  if (value === null || value === undefined) return ''
+  if (typeof value === 'string') return value
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value)
+  return ''
 }
 
 function uniqueValues<T extends object>(
   rows: T[],
   key: keyof T,
 ): string[] {
-  return Array.from(new Set(rows.map((row) => String(row[key] ?? ''))))
+  return Array.from(new Set(rows.map((row) => cellToString(row[key]))))
     .filter((value) => value.length > 0)
     .sort()
 }
@@ -47,12 +54,12 @@ export function ResultsSection<T extends object>({
       const queryMatches =
         normalisedQuery.length === 0 ||
         searchFields.some((field) =>
-          String(row[field] ?? '').toLowerCase().includes(normalisedQuery),
+          cellToString(row[field]).toLowerCase().includes(normalisedQuery),
         )
       const filtersMatch = filterKeys.every((key) => {
         const selected = filters[String(key)]
 
-        return selected === undefined || selected === '' || String(row[key] ?? '') === selected
+        return selected === undefined || selected === '' || cellToString(row[key]) === selected
       })
 
       return queryMatches && filtersMatch
@@ -107,22 +114,24 @@ export function ResultsSection<T extends object>({
       </div>
 
       <div className="grid grid-cols-[1fr_repeat(3,180px)] gap-3">
-        <label className="relative block">
-          <span className="sr-only">Search {title}</span>
+        <div className="relative">
+          <label className="sr-only" htmlFor={`search-${title}`}>Search {title}</label>
           <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
           <input
             className="h-10 w-full rounded border border-border bg-white pl-9 pr-3 text-sm"
+            id={`search-${title}`}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search text and explanations"
             value={query}
           />
-        </label>
+        </div>
 
         {filterKeys.slice(0, 3).map((key) => (
-          <label className="block" key={String(key)}>
-            <span className="sr-only">Filter by {String(key)}</span>
+          <div key={String(key)}>
+            <label className="sr-only" htmlFor={`filter-${String(key)}-${title}`}>Filter by {String(key)}</label>
             <select
               className="h-10 w-full rounded border border-border bg-white px-3 text-sm"
+              id={`filter-${String(key)}-${title}`}
               onChange={(event) =>
                 setFilters((current) => ({
                   ...current,
@@ -138,7 +147,7 @@ export function ResultsSection<T extends object>({
                 </option>
               ))}
             </select>
-          </label>
+          </div>
         ))}
       </div>
 
@@ -157,10 +166,12 @@ export function ResultsSection<T extends object>({
       />
 
       <div className="flex items-center justify-between">
-        <label className="flex items-center gap-2 text-sm text-slate-600">
-          Rows
+        <div className="flex items-center gap-2 text-sm text-slate-600">
+          <label className="sr-only" htmlFor="page-size">Rows per page</label>
+          <span aria-hidden="true">Rows</span>
           <select
             className="h-9 rounded border border-border bg-white px-2"
+            id="page-size"
             onChange={(event) => pagination.setPageSize(Number(event.target.value))}
             value={pagination.pageSize}
           >
@@ -170,7 +181,7 @@ export function ResultsSection<T extends object>({
               </option>
             ))}
           </select>
-        </label>
+        </div>
         <div className="flex gap-2">
           <Button
             disabled={pagination.pageIndex === 0}

@@ -3,7 +3,7 @@ import { formatPercentage } from '../../utils/formatters'
 import { StatCard } from '../shared/StatCard'
 
 interface SummaryPanelProps {
-  stats: ReportStats
+  readonly stats: ReportStats
 }
 
 export function SummaryPanel({ stats }: SummaryPanelProps) {

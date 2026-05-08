@@ -14,7 +14,7 @@ import { ResultsSection } from './ResultsSection'
 import { SummaryPanel } from './SummaryPanel'
 
 interface ModelReportProps {
-  report: ModelReportType
+  readonly report: ModelReportType
 }
 
 const ambiguityColumns: DataTableColumn<AmbiguityResult>[] = [

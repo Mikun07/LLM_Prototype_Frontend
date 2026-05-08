@@ -8,10 +8,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: 'border-brand-600 bg-brand-600 text-white hover:bg-brand-700',
-  secondary: 'border-border bg-white text-brand-900 hover:border-brand-500',
-  ghost: 'border-transparent bg-transparent text-slate-700 hover:bg-slate-100',
-  danger: 'border-smell bg-smell text-white hover:bg-red-700',
+  primary: 'border-transparent bg-gradient-brand text-white shadow-sm shadow-brand-200 hover:opacity-90 hover:shadow-md',
+  secondary: 'border-brand-200 bg-white text-brand-700 hover:bg-brand-50 hover:border-brand-400',
+  ghost: 'border-transparent bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+  danger: 'border-transparent bg-gradient-warm text-white shadow-sm hover:opacity-90',
 }
 
 export function Button({
@@ -26,8 +26,8 @@ export function Button({
   return (
     <button
       className={[
-        'inline-flex h-10 items-center justify-center gap-2 rounded border px-4 text-sm font-semibold transition',
-        'disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400',
+        'inline-flex h-10 items-center justify-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-all duration-150',
+        'disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400 disabled:shadow-none',
         variantClasses[variant],
         className,
       ].join(' ')}

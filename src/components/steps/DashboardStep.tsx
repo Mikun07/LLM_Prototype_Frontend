@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useAppSelector } from '../../store/hooks'
-import { Button } from '../shared/Button'
 import { ComparisonReport } from '../dashboard/ComparisonReport'
 import { ModelReport } from '../dashboard/ModelReport'
 
@@ -18,21 +17,27 @@ export function DashboardStep() {
     )
   }
 
+  const tabConfig = [
+    { key: 'claude', label: 'Claude Report', activeClass: 'bg-gradient-brand text-white shadow-md shadow-brand-200' },
+    { key: 'chatgpt', label: 'ChatGPT Report', activeClass: 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md shadow-teal-100' },
+    { key: 'comparison', label: 'Comparison', activeClass: 'bg-gradient-to-r from-accent-500 to-accent-600 text-white shadow-md shadow-accent-100' },
+  ]
+
   return (
     <section className="flex flex-col gap-6">
-      <div className="flex gap-2 border-b border-border pb-3">
-        {[
-          ['claude', 'Claude Report'],
-          ['chatgpt', 'ChatGPT Report'],
-          ['comparison', 'Comparison'],
-        ].map(([key, label]) => (
-          <Button
+      <div className="flex flex-wrap gap-2 rounded-2xl border border-border bg-white p-2 shadow-sm">
+        {tabConfig.map(({ key, label, activeClass }) => (
+          <button
+            className={[
+              'flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-150 min-w-[120px]',
+              tab === key ? activeClass : 'text-slate-600 hover:bg-slate-100',
+            ].join(' ')}
             key={key}
             onClick={() => setTab(key as DashboardTab)}
-            variant={tab === key ? 'primary' : 'secondary'}
+            type="button"
           >
             {label}
-          </Button>
+          </button>
         ))}
       </div>
 

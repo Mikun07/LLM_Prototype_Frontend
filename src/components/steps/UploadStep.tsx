@@ -20,31 +20,36 @@ const emptyDetection: ColumnDetection = {
   project: false,
 }
 
-function PreviewTable({ rows }: { rows: RequirementRow[] }) {
+function PreviewTable({ rows }: { readonly rows: RequirementRow[] }) {
   return (
-    <div className="overflow-hidden rounded border border-border bg-white">
-      <table className="min-w-full text-left text-sm">
-        <thead className="bg-brand-50 text-xs uppercase text-brand-900">
-          <tr>
-            {['ID', 'Text', 'Domain', 'Type', 'Project'].map((header) => (
-              <th className="border-b border-border px-4 py-3" key={header}>
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.slice(0, 20).map((row) => (
-            <tr className="border-b border-border last:border-b-0" key={row.id}>
-              <td className="px-4 py-3 font-mono">{row.id}</td>
-              <td className="max-w-xl px-4 py-3">{row.text}</td>
-              <td className="px-4 py-3">{row.domain}</td>
-              <td className="px-4 py-3">{row.type}</td>
-              <td className="px-4 py-3">{row.project}</td>
+    <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
+      <div className="border-b border-border bg-gradient-to-r from-brand-600 to-accent-500 px-4 py-3">
+        <p className="text-xs font-bold uppercase tracking-widest text-white/80">Preview — first {Math.min(rows.length, 20)} rows</p>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-left text-sm">
+          <thead className="bg-slate-50 text-xs font-bold uppercase tracking-wide text-slate-500">
+            <tr>
+              {['ID', 'Text', 'Domain', 'Type', 'Project'].map((header) => (
+                <th className="border-b border-border px-4 py-3" key={header}>
+                  {header}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.slice(0, 20).map((row, i) => (
+              <tr className={['border-b border-border last:border-b-0', i % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'].join(' ')} key={row.id}>
+                <td className="px-4 py-3 font-mono text-brand-600">{row.id}</td>
+                <td className="max-w-xl px-4 py-3 text-slate-700">{row.text}</td>
+                <td className="px-4 py-3 text-slate-600">{row.domain}</td>
+                <td className="px-4 py-3 text-slate-600">{row.type}</td>
+                <td className="px-4 py-3 text-slate-600">{row.project}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
@@ -75,19 +80,19 @@ export function UploadStep() {
 
       {file === null ? null : (
         <>
-          <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-4">
-            <div className="rounded border border-border bg-white p-4">
-              <p className="text-sm text-slate-500">File</p>
-              <p className="mt-1 font-semibold text-slate-900">{file.name}</p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-[1fr_1fr_1fr_auto]">
+            <div className="rounded-xl border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-brand-400">File</p>
+              <p className="mt-1 font-semibold text-slate-900 truncate">{file.name}</p>
             </div>
-            <div className="rounded border border-border bg-white p-4">
-              <p className="text-sm text-slate-500">Size</p>
+            <div className="rounded-xl border border-teal-100 bg-gradient-to-br from-teal-50 to-white p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-teal-500">Size</p>
               <p className="mt-1 font-mono font-semibold text-slate-900">
                 {formatFileSize(file.size)}
               </p>
             </div>
-            <div className="rounded border border-border bg-white p-4">
-              <p className="text-sm text-slate-500">Rows</p>
+            <div className="rounded-xl border border-accent-100 bg-gradient-to-br from-accent-50 to-white p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-accent-500">Rows</p>
               <p className="mt-1 font-mono font-semibold text-slate-900">{file.rowCount}</p>
             </div>
             <Button icon={<RotateCcw aria-hidden="true" className="h-4 w-4" />} onClick={upload.clearFile} variant="secondary">
@@ -95,22 +100,23 @@ export function UploadStep() {
             </Button>
           </div>
 
-          <div className="rounded border border-border bg-white p-4">
-            <h2 className="font-display text-xl font-semibold text-brand-900">
+          <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+            <h2 className="font-display text-lg font-bold text-slate-800">
               Detected columns
             </h2>
-            <div className="mt-3 grid grid-cols-5 gap-3">
+            <div className="mt-3 grid grid-cols-3 gap-3 sm:grid-cols-5">
               {Object.entries(detectedColumns).map(([name, isPresent]) => (
                 <div
                   className={[
-                    'rounded border px-3 py-2 text-sm font-semibold uppercase',
+                    'flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold uppercase',
                     isPresent
-                      ? 'border-green-200 bg-green-50 text-clean'
-                      : 'border-slate-200 bg-slate-50 text-slate-400',
+                      ? 'bg-teal-500 text-white shadow-sm shadow-teal-100'
+                      : 'bg-slate-100 text-slate-400',
                   ].join(' ')}
                   key={name}
                 >
-                  {name}
+                  <span>{isPresent ? '✓' : '–'}</span>
+                  <span>{name}</span>
                 </div>
               ))}
             </div>
