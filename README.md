@@ -1,14 +1,14 @@
 # ReqSmell Frontend
 
-Version 2.2 of the ReqSmell frontend.
+Version 2.4 of the ReqSmell frontend.
 
 This repository contains the web client for the ReqSmell requirements smell detection
 prototype. It is built with React, TypeScript, Vite, Redux Toolkit, Tailwind CSS,
 Recharts, jsPDF, and Vitest.
 
-Version `v2.0.0` is the first usable interface baseline. Version `v2.1.0` clarified the
-version-control policy, `v2.2.0` adds explicit switching support, and `v2.3.0` delivers
-a full UI redesign, responsiveness, a custom logo, and resolves all linter warnings.
+`v2.0.0` is the frozen major baseline (first complete interface). `v2.1.0`–`v2.3.0` are
+interface design changes built on top of it. Read [docs/VERSIONING.md](docs/VERSIONING.md)
+to understand the three-tier version model.
 
 ## Start Here
 
@@ -19,13 +19,12 @@ If you are new to this project, read these documents in order:
 | [docs/SETUP.md](docs/SETUP.md) | Installing tools, cloning the repo, installing dependencies, and running the app |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Understanding every npm, Git, test, build, and version command |
 | [docs/TESTING.md](docs/TESTING.md) | Running checks and understanding what each test command proves |
-| [docs/VERSIONING.md](docs/VERSIONING.md) | Upgrading, downgrading, restoring clean slates, and creating future versions |
+| [docs/VERSIONING.md](docs/VERSIONING.md) | The three-tier version model, folder structure, and release process |
 | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Fixing common setup, npm, Git, Vite, and Windows issues |
-| [docs/versions/v2.3.0.md](docs/versions/v2.3.0.md) | Full documentation for version 2.3 |
-| [docs/versions/v2.2.0.md](docs/versions/v2.2.0.md) | Full documentation for version 2.2 |
-| [docs/versions/v2.1.0.md](docs/versions/v2.1.0.md) | Version-control policy documentation for version 2.1 |
-| [docs/versions/v2.0.0.md](docs/versions/v2.0.0.md) | Baseline documentation for version 2 |
-| [docs/versions/v1.0.0.md](docs/versions/v1.0.0.md) | Rollback documentation for version 1 |
+| [docs/versions/index.md](docs/versions/index.md) | Full version history table |
+| [docs/versions/v2/v2.4.0.md](docs/versions/v2/v2.4.0.md) | Full documentation for version 2.4 (current) |
+| [docs/versions/v2/v2.0.0.md](docs/versions/v2/v2.0.0.md) | Full documentation for the v2 baseline |
+| [docs/versions/v1/v1.0.0.md](docs/versions/v1/v1.0.0.md) | Full documentation for version 1 |
 
 ## Quick Setup
 
@@ -98,45 +97,27 @@ Return to the latest `main` branch:
 npm run version:use -- -Latest -Install
 ```
 
-## Important Version-2 Notes
+## Version Summary
 
-The npm project version is:
-
-```text
-2.3.0
-```
-
-The stable version-two baseline tag is:
-
-```text
-v2.0.0
-```
-
-The current post-baseline adjustment tag is:
-
-```text
-v2.3.0
-```
-
-Version 2 contains deterministic frontend preview reports so the dashboard interface can
-be reviewed before live backend result integration is completed. It does not call any LLM
-API from the browser and does not store uploaded requirement data in browser storage.
-
-## Version Baseline Policy
-
-The project now treats `v1.0.0` and `v2.0.0` as baseline releases.
-
-| Release lane | Meaning |
+| Field | Value |
 |---|---|
-| `v1.0.0` | Frozen version-1 environment baseline |
-| `v2.0.0` | Frozen version-2 interface baseline |
-| `v2.1.0`, `v2.2.0`, `v2.3.0` | Normal changes, adjustments, and feature work built from the version-2 baseline |
-| `v3.0.0` | Next major baseline when the project scope changes significantly |
-| `v4.0.0` | Later major baseline when another major scope change is intentionally created |
+| Current version | `2.3.0` |
+| Active major baseline | `v2.0.0` |
+| Next expected release | `v2.4.0` (interface design change) |
 
-Going forward, do not move the `v2.0.0` tag for ordinary changes. Create a new version
-such as `v2.2.0` or `v2.3.0` instead. The version helper can switch to any existing
-variation tag, including shorthand such as `v2.2` or `2.2`.
+Version 2 uses deterministic frontend preview reports so the dashboard can be reviewed
+before live backend integration. No LLM API is called from the browser and no requirement
+data is stored in the browser.
+
+## Three-Tier Version Model
+
+| Tier | Pattern | When to use |
+|---|---|---|
+| Major baseline | `vX.0.0` | System architecture changes — new major component, backend integration, or complete rebuild |
+| Interface design change | `vX.Y.0` | Visible design or flow change — layout, colours, a new step, a reworked component |
+| Patch | `vX.Y.Z` | Minimal, barely-noticeable — package update, typo fix, config tweak |
+
+Full explanation and release process: [docs/VERSIONING.md](docs/VERSIONING.md)
 
 ## Project Structure
 

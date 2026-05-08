@@ -56,7 +56,7 @@ function asDomain(row: RequirementRow): string {
   return row.domain?.trim() || 'General'
 }
 
-function asType(row: RequirementRow): RequirementType | string {
+function asType(row: RequirementRow): RequirementType {
   return row.type ?? 'UNKNOWN'
 }
 

@@ -4,7 +4,7 @@ export type ModelName = 'claude' | 'chatgpt'
 
 export type SmellType = 'ambiguity' | 'inconsistency'
 
-export type RequirementType = 'FR' | 'NFR' | 'UNKNOWN'
+export type RequirementType = 'FR' | 'NFR' | 'UNKNOWN' | (string & {})
 
 export type SmellLabel = 'SMELL' | 'CLEAN'
 
@@ -38,7 +38,7 @@ export interface RequirementRow {
   id: string
   text: string
   domain?: string
-  type?: RequirementType | string
+  type?: RequirementType
   project?: string
 }
 
@@ -52,6 +52,8 @@ export interface ParsedFile {
 export interface RunConfig {
   temperature: number
   maxGroupSize: number
+  selectedModels: ModelName[]
+  selectedSmellTypes: SmellType[]
 }
 
 export interface CsvParseResult {
@@ -96,7 +98,7 @@ export interface AmbiguityResult {
   id: string
   text: string
   domain: string
-  type: RequirementType | string
+  type: RequirementType
   label: SmellLabel
   confidence: ConfidenceLevel
   explanation: string
@@ -138,7 +140,7 @@ export interface ComparisonRow {
   id: string
   text: string
   domain: string
-  type: RequirementType | string
+  type: RequirementType
   smellType: SmellType
   claudeLabel: SmellLabel
   claudeConfidence: ConfidenceLevel

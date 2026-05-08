@@ -50,7 +50,7 @@ function readValue(
   return row[column]?.trim() ?? ''
 }
 
-function normaliseRequirementType(value: string): RequirementType | string {
+function normaliseRequirementType(value: string): RequirementType {
   const upper = value.trim().toUpperCase()
 
   if (upper === 'FR' || upper === 'FUNCTIONAL') {

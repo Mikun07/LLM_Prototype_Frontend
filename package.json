@@ -1,7 +1,7 @@
 {
   "name": "reqsmell-frontend",
   "private": true,
-  "version": "2.3.0",
+  "version": "2.4.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,9 @@
     "test": "vitest",
     "version:current": "git describe --tags --always --dirty",
     "version:list": "git tag --list",
-    "version:use": "powershell -ExecutionPolicy Bypass -File ./scripts/use-version.ps1"
+    "version:use": "powershell -ExecutionPolicy Bypass -File ./scripts/use-version.ps1",
+    "version:check": "powershell -ExecutionPolicy Bypass -File ./scripts/check-version.ps1",
+    "hooks:install": "powershell -ExecutionPolicy Bypass -File ./scripts/install-hooks.ps1"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.3.0",

@@ -30,6 +30,8 @@ const initialState: WizardState = {
   config: {
     temperature: 0.1,
     maxGroupSize: 20,
+    selectedModels: ['claude', 'chatgpt'],
+    selectedSmellTypes: ['ambiguity', 'inconsistency'],
   },
   configReviewed: false,
 }

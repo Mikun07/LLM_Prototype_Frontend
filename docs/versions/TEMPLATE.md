@@ -7,29 +7,31 @@
 | Tagged commit | `commit-sha` |
 | Branch at release | `main` |
 | Project version | `X.Y.Z` |
-| Baseline relationship | Baseline / v2-line adjustment / new major baseline |
+| Tier | [see below] |
 | Status | Draft / Stable / Deprecated |
+
+## Tier Classification
+
+Pick exactly one row and mark it.
+
+| Tier | Pattern | This version |
+|---|---|---|
+| Major baseline | `vX.0.0` — system architecture change, complete rebuild, or new major component | |
+| Interface design change | `vX.Y.0` — visible design or flow change, new step, layout rework | |
+| Patch | `vX.Y.Z` — package update, config tweak, typo fix, barely-noticeable correction | |
+
+State the tier and what qualifies this version for it in one or two sentences below the table.
 
 ## Plain-Language Summary
 
-Explain what this version is, why it exists, and what someone can do with it.
+Explain what this version is, why it exists, and what a non-technical reader can do with it.
+Keep this to 3–5 sentences. No jargon.
 
-## Version Classification
+## What Changed From The Previous Version
 
-State whether this version is:
-
-| Classification | Use when |
-|---|---|
-| Baseline | The version creates a frozen checkpoint such as `v2.0.0` or `v3.0.0` |
-| v2-line adjustment | The version is normal work after `v2.0.0`, such as `v2.1.0` or `v2.2.0` |
-| New major baseline | The version intentionally starts a new major line such as `v3.0.0` or `v4.0.0` |
-
-For ordinary changes after `v2.2.0`, use `v2.3.0`, then `v2.4.0`, then `v2.5.0`.
-Do not move the `v1.0.0` or `v2.0.0` baseline tags.
-
-Every variation must be switchable by tag and documented in this folder. The version
-helper accepts exact tags and shorthand such as `v2.3`, `2.3`, and `v2.3.0` when the tag
-exists.
+| Area | What changed | Why |
+|---|---|---|
+| | | |
 
 ## Who This Version Is For
 
@@ -44,18 +46,11 @@ exists.
 
 | Area | Details |
 |---|---|
-| Project setup | |
-| UI | |
-| State management | |
-| API | |
-| Testing | |
-| Build tooling | |
-| Documentation | |
-| Dependencies | |
+| | |
 
 ## What Is Not Included Yet
 
-| Missing feature | Expected future work |
+| Missing feature | Expected in which future version |
 |---|---|
 | | |
 
@@ -63,10 +58,10 @@ exists.
 
 | Software | Recommended version | Check command |
 |---|---|---|
-| Node.js | | `node --version` |
-| npm | | `npm --version` |
-| Git | | `git --version` |
-| PowerShell | | `$PSVersionTable.PSVersion` |
+| Node.js | 20 or later | `node --version` |
+| npm | 10 or later | `npm --version` |
+| Git | Current stable | `git --version` |
+| PowerShell | 5.1 or later | `$PSVersionTable.PSVersion` |
 
 ## First-Time Setup
 
@@ -77,13 +72,21 @@ npm ci
 npm run dev
 ```
 
-Open:
+Open in your browser:
 
 ```text
 http://127.0.0.1:5173/
 ```
 
+Test the interface with the sample file:
+
+```text
+examples/sample-requirements.csv
+```
+
 ## Verify This Version
+
+Run all five checks. All must pass before this version can be tagged.
 
 ```powershell
 npm run type-check
@@ -97,11 +100,11 @@ Expected results:
 
 | Command | Expected result |
 |---|---|
-| `npm run type-check` | |
-| `npm run lint` | |
-| `npm run test -- --run` | |
-| `npm audit` | |
-| `npm run build` | |
+| `npm run type-check` | 0 errors |
+| `npm run lint` | 0 errors, 0 warnings |
+| `npm run test -- --run` | All tests pass |
+| `npm audit` | 0 vulnerabilities |
+| `npm run build` | Build succeeds, output in `dist/` |
 
 ## Important Files
 
@@ -113,19 +116,19 @@ Expected results:
 
 | Script | Purpose |
 |---|---|
-| `npm run dev` | |
-| `npm run build` | |
-| `npm run preview` | |
-| `npm run lint` | |
-| `npm run type-check` | |
-| `npm run test -- --run` | |
-| `npm run version:list` | |
-| `npm run version:current` | |
-| `npm run version:use` | |
+| `npm run dev` | Vite dev server on port 5173 |
+| `npm run build` | Type-check then production build |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | ESLint across `.ts` and `.tsx` |
+| `npm run type-check` | TypeScript compiler, type errors only |
+| `npm run test -- --run` | Vitest single pass |
+| `npm run version:list` | List all Git version tags |
+| `npm run version:current` | Show current tag or commit |
+| `npm run version:use` | Switch to a specific version |
 
 ## Restore This Version
 
-View the exact tagged snapshot:
+View the exact tagged snapshot without changing your branch:
 
 ```powershell
 git fetch --tags
@@ -153,14 +156,15 @@ npm run version:use -- -Latest -Install
 
 ## Dependency Notes
 
-| Package | Version line | Reason |
+| Package | Version | Reason included or changed |
 |---|---|---|
-| `package-name` | `version` | |
+| | | |
 
 ## Backend Assumption
 
-Describe whether this version needs the backend, which URL it expects, and which API
-routes it calls.
+State whether this version needs the backend running, which URL it expects, and whether any
+live API calls are made. Example: "This version uses simulated frontend progress — no
+backend is required."
 
 ## Known Limitations
 
@@ -170,15 +174,16 @@ routes it calls.
 
 ## Upgrade Notes
 
-Explain what a developer should know when moving from the previous version to this one.
+What should a developer know when moving from the previous version to this one?
+List any breaking changes, renamed files, or config differences.
 
 ## Downgrade Notes
 
-Explain what a developer should know before returning from this version to the previous
-one.
+What should a developer know before returning to the previous version?
+List anything that would break or be missing after downgrading.
 
 ## Recommended Next Work
 
-1. Add the next clear task.
-2. Add the expected tests.
-3. Add any documentation updates.
+1. First clear next task.
+2. Second clear next task.
+3. Any documentation or test updates needed.

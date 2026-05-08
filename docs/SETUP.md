@@ -75,6 +75,24 @@ Use `npm install` when:
 | You changed `package.json` dependencies | It updates `package-lock.json` |
 | You intentionally add, remove, or upgrade packages | It records dependency changes |
 
+## Install Git Hooks
+
+Run this once after cloning. It installs the pre-commit version check that
+automatically validates the version number, tier, and documentation before
+every commit is allowed through.
+
+```powershell
+npm run hooks:install
+```
+
+After installation, the check runs silently on every `git commit`. If anything
+is wrong with the version setup, the commit is blocked and the problem is
+printed clearly. You can also run the check manually at any time:
+
+```powershell
+npm run version:check
+```
+
 ## Start The Development Server
 
 Run:
