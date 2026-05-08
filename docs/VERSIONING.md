@@ -6,11 +6,14 @@ future version releases.
 The current project version is:
 
 ```text
-package.json version: 2.0.0
-stable Git tag: v2.0.0
+package.json version: 2.1.0
+stable Git tag: v2.1.0
 ```
 
-Version 1 remains available as `v1.0.0` for rollback.
+Version 1 remains available as `v1.0.0` for rollback. Version 2 baseline remains available
+as `v2.0.0`. All normal adjustments to the version-2 baseline become `v2.1.0`,
+`v2.2.0`, `v2.3.0`, and so on until a new major baseline such as `v3.0.0` or `v4.0.0`
+is intentionally created.
 
 ## Why Versioning Exists
 
@@ -41,11 +44,29 @@ For this project, Git tags are the clean checkpoints.
 | Item | Meaning |
 |---|---|
 | `main` | Latest accepted project state |
-| `v2.0.0` | Current interface snapshot |
+| `v2.1.0` | Current version-control policy adjustment on the version-2 baseline |
+| `v2.0.0` | Frozen version-2 interface baseline |
 | `v1.0.0` | Original environment baseline |
+| `v2.1.0`, `v2.2.0`, `v2.3.0` | Future changes based on the version-2 baseline |
+| `v3.0.0`, `v4.0.0` | Future major baselines |
 | `docs/versions/vX.Y.Z.md` | Detailed document for a version |
 | `package.json` version | npm project version for the current stable version |
 | `package-lock.json` | Exact dependency versions for reproducible installs |
+
+## Baseline Release Policy
+
+Baseline releases are frozen checkpoints. They must remain restorable.
+
+| Baseline | Meaning | Future work based on it |
+|---|---|---|
+| `v1.0.0` | Environment and tooling baseline | Use only for rollback or reference |
+| `v2.0.0` | First usable interface baseline | Release normal follow-up work as `v2.1.0`, `v2.2.0`, `v2.3.0` |
+| `v3.0.0` | Future major baseline | Create only when the project scope changes significantly |
+| `v4.0.0` | Later major baseline | Create only when another major scope change is intentionally approved |
+
+Do not rewrite or move baseline tags. If a change modifies the current baseline behavior,
+documentation, tests, or interface, release it as the next version in the current major
+line. This policy update is `v2.1.0`; the next normal release should be `v2.2.0`.
 
 ## Version Number Rules
 
@@ -53,9 +74,9 @@ This project uses semantic versioning.
 
 | Change type | Example | Use when |
 |---|---|---|
-| Patch | `2.0.0` to `2.0.1` | Bug fixes, small docs, small internal improvements |
-| Minor | `2.0.0` to `2.1.0` | Backward-compatible features |
-| Major | `1.0.0` to `2.0.0` | Breaking architecture, API, workflow, or product-scope changes |
+| Minor on current baseline | `2.0.0` to `2.1.0`, then `2.2.0` | Normal adjustments, docs, tests, fixes, and backward-compatible features on the version-2 baseline |
+| Patch on a released minor | `2.1.0` to `2.1.1` | Emergency correction to an already released minor version, only when a new minor would be too broad |
+| Major baseline | `2.2.0` to `3.0.0` | New baseline because architecture, API, workflow, or product scope changes significantly |
 
 Version 2 is a major version because it changes the project from an environment baseline
 into a usable frontend interface.
@@ -74,22 +95,22 @@ Show current tag or commit:
 npm run version:current
 ```
 
-Switch to version 2:
+Switch to the current version-2 line:
 
 ```powershell
-npm run version:use -- -Version v2.0.0
+npm run version:use -- -Version v2.1.0
 ```
 
-Switch to version 2 and reinstall dependencies:
+Switch to the current version-2 line and reinstall dependencies:
 
 ```powershell
-npm run version:use -- -Version v2.0.0 -Install
+npm run version:use -- -Version v2.1.0 -Install
 ```
 
-Switch to version 2, remove ignored generated files, and reinstall dependencies:
+Switch to the current version-2 line, remove ignored generated files, and reinstall dependencies:
 
 ```powershell
-npm run version:use -- -Version v2.0.0 -CleanIgnored -Install
+npm run version:use -- -Version v2.1.0 -CleanIgnored -Install
 ```
 
 Rollback to version 1:
@@ -107,13 +128,13 @@ npm run version:use -- -Latest -Install
 Create an editable branch from version 2:
 
 ```powershell
-npm run version:use -- -Version v2.0.0 -Branch work/from-v2.0.0 -Install
+npm run version:use -- -Version v2.1.0 -Branch work/from-v2.1.0 -Install
 ```
 
 Dry-run a version switch:
 
 ```powershell
-npm run version:use -- -Version v2.0.0 -WhatIf
+npm run version:use -- -Version v2.1.0 -WhatIf
 ```
 
 ## Version Script Options
@@ -143,13 +164,13 @@ from being overwritten during a version switch.
 
 ## Clean Slate Workflows
 
-### Clean Slate For Version 2
+### Clean Slate For The Current Version-2 Line
 
-Use this when you want the project to match version 2 and remove generated files:
+Use this when you want the project to match the current version-2 line and remove generated files:
 
 ```powershell
 git status
-npm run version:use -- -Version v2.0.0 -CleanIgnored -Install
+npm run version:use -- -Version v2.1.0 -CleanIgnored -Install
 ```
 
 What happens:
@@ -157,7 +178,7 @@ What happens:
 | Step | Action |
 |---|---|
 | Check Git state | Script refuses to continue if work is unsaved |
-| Switch version | Git checks out `v2.0.0` |
+| Switch version | Git checks out `v2.1.0` |
 | Clean ignored files | `node_modules`, `dist`, logs, and caches are removed |
 | Install dependencies | `npm ci` installs from the lockfile |
 
@@ -193,12 +214,12 @@ Run `git status` first.
 
 ## Safe Upgrade Workflow
 
-Use this when moving from version 1 to version 2.
+Use this when moving from version 1 or the `v2.0.0` baseline to the current version-2 line.
 
 ```powershell
 git status
 git fetch origin --tags --prune
-npm run version:use -- -Version v2.0.0 -Install
+npm run version:use -- -Version v2.1.0 -Install
 npm run type-check
 npm run lint
 npm run test -- --run
@@ -233,6 +254,19 @@ Do not edit directly in detached HEAD if you want to keep the changes.
 
 Use this process only when intentionally releasing a new version.
 
+First choose the release number:
+
+| Situation | Version to create |
+|---|---|
+| Any normal adjustment or change after `v2.1.0` | `v2.2.0` |
+| Next normal adjustment after `v2.2.0` | `v2.3.0` |
+| Another normal adjustment after `v2.3.0` | `v2.4.0` |
+| Major new baseline after version 2 line | `v3.0.0` |
+| Later major baseline after version 3 line | `v4.0.0` |
+
+Use `v2.N.0` for ordinary version-2 baseline work. Use `v3.0.0` or `v4.0.0` only when
+you intentionally create a new baseline.
+
 1. Start from `main`.
 
 ```powershell
@@ -250,10 +284,10 @@ git switch -c feature/version-work
 
 4. Update `package.json`.
 
-Example:
+Example for the next normal change after `v2.1.0`:
 
 ```json
-"version": "2.1.0"
+"version": "2.2.0"
 ```
 
 5. Sync the lockfile.
@@ -265,7 +299,7 @@ npm install --package-lock-only
 6. Create version documentation.
 
 ```powershell
-Copy-Item docs\versions\TEMPLATE.md docs\versions\v2.1.0.md
+Copy-Item docs\versions\TEMPLATE.md docs\versions\v2.2.0.md
 ```
 
 7. Fill in the version document.
@@ -286,20 +320,20 @@ npm run build
 
 ```powershell
 git add .
-git commit -m "Release v2.1.0"
+git commit -m "Release v2.2.0"
 ```
 
 11. Tag.
 
 ```powershell
-git tag -a v2.1.0 -m "Version 2.1.0"
+git tag -a v2.2.0 -m "Version 2.2.0"
 ```
 
 12. Push.
 
 ```powershell
 git push origin main
-git push origin v2.1.0
+git push origin v2.2.0
 ```
 
 ## Version Document Requirements
@@ -317,6 +351,6 @@ Each version document must include:
 | Test steps | Commands used to verify it |
 | Restore steps | How to return to that version |
 | Known limitations | What is missing or risky |
+| Baseline relationship | Whether this is a baseline, a v2-line adjustment, or a new major baseline |
 | Upgrade notes | What changed from the previous version |
 | Downgrade notes | What to know before returning to an older version |
-

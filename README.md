@@ -1,14 +1,13 @@
 # ReqSmell Frontend
 
-Version 2 of the ReqSmell frontend.
+Version 2.1 of the ReqSmell frontend.
 
 This repository contains the web client for the ReqSmell requirements smell detection
 prototype. It is built with React, TypeScript, Vite, Redux Toolkit, Tailwind CSS,
 Recharts, jsPDF, and Vitest.
 
-Version 2 adds the first usable interface on top of the version-1 environment baseline:
-CSV upload and preview, fixed run configuration, progress view, report dashboard, charts,
-tables, filters, pagination, and CSV export.
+Version `v2.0.0` is the first usable interface baseline. Version `v2.1.0` keeps that
+baseline intact and adds the clarified version-control policy for future adjustments.
 
 ## Start Here
 
@@ -21,7 +20,8 @@ If you are new to this project, read these documents in order:
 | [docs/TESTING.md](docs/TESTING.md) | Running checks and understanding what each test command proves |
 | [docs/VERSIONING.md](docs/VERSIONING.md) | Upgrading, downgrading, restoring clean slates, and creating future versions |
 | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Fixing common setup, npm, Git, Vite, and Windows issues |
-| [docs/versions/v2.0.0.md](docs/versions/v2.0.0.md) | Full documentation for version 2 |
+| [docs/versions/v2.1.0.md](docs/versions/v2.1.0.md) | Full documentation for version 2.1 |
+| [docs/versions/v2.0.0.md](docs/versions/v2.0.0.md) | Baseline documentation for version 2 |
 | [docs/versions/v1.0.0.md](docs/versions/v1.0.0.md) | Rollback documentation for version 1 |
 
 ## Quick Setup
@@ -77,10 +77,10 @@ Show the current version or commit:
 npm run version:current
 ```
 
-Restore the version-2 clean slate after the `v2.0.0` tag exists:
+Restore the current version-2.1 clean slate after the `v2.1.0` tag exists:
 
 ```powershell
-npm run version:use -- -Version v2.0.0 -CleanIgnored -Install
+npm run version:use -- -Version v2.1.0 -CleanIgnored -Install
 ```
 
 Rollback to version 1:
@@ -100,18 +100,39 @@ npm run version:use -- -Latest -Install
 The npm project version is:
 
 ```text
-2.0.0
+2.1.0
 ```
 
-The stable version-two Git tag is:
+The stable version-two baseline tag is:
 
 ```text
 v2.0.0
 ```
 
+The current post-baseline adjustment tag is:
+
+```text
+v2.1.0
+```
+
 Version 2 contains deterministic frontend preview reports so the dashboard interface can
 be reviewed before live backend result integration is completed. It does not call any LLM
 API from the browser and does not store uploaded requirement data in browser storage.
+
+## Version Baseline Policy
+
+The project now treats `v1.0.0` and `v2.0.0` as baseline releases.
+
+| Release lane | Meaning |
+|---|---|
+| `v1.0.0` | Frozen version-1 environment baseline |
+| `v2.0.0` | Frozen version-2 interface baseline |
+| `v2.1.0`, `v2.2.0`, `v2.3.0` | Normal changes, adjustments, and feature work built from the version-2 baseline |
+| `v3.0.0` | Next major baseline when the project scope changes significantly |
+| `v4.0.0` | Later major baseline when another major scope change is intentionally created |
+
+Going forward, do not move the `v2.0.0` tag for ordinary changes. Create a new version
+such as `v2.1.0` or `v2.2.0` instead.
 
 ## Project Structure
 

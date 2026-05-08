@@ -7,11 +7,25 @@
 | Tagged commit | `commit-sha` |
 | Branch at release | `main` |
 | Project version | `X.Y.Z` |
+| Baseline relationship | Baseline / v2-line adjustment / new major baseline |
 | Status | Draft / Stable / Deprecated |
 
 ## Plain-Language Summary
 
 Explain what this version is, why it exists, and what someone can do with it.
+
+## Version Classification
+
+State whether this version is:
+
+| Classification | Use when |
+|---|---|
+| Baseline | The version creates a frozen checkpoint such as `v2.0.0` or `v3.0.0` |
+| v2-line adjustment | The version is normal work after `v2.0.0`, such as `v2.1.0` or `v2.2.0` |
+| New major baseline | The version intentionally starts a new major line such as `v3.0.0` or `v4.0.0` |
+
+For ordinary changes after `v2.1.0`, use `v2.2.0`, then `v2.3.0`, then `v2.4.0`.
+Do not move the `v1.0.0` or `v2.0.0` baseline tags.
 
 ## Who This Version Is For
 
@@ -164,4 +178,3 @@ one.
 1. Add the next clear task.
 2. Add the expected tests.
 3. Add any documentation updates.
-
