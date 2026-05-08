@@ -15,6 +15,7 @@ docs/versions/
 
 | Version | Date | Tier | Summary |
 |---|---|---|---|
+| [v2.5.0](v2/v2.5.0.md) | 2026-05-08 | Interface design change | CSV upload preview pagination and frontend policy guard |
 | [v2.4.0](v2/v2.4.0.md) | 2026-05-08 | Interface design change | Configure step redesign, version doc restructure, pre-commit version monitoring |
 | [v2.3.0](v2/v2.3.0.md) | 2026-05-08 | Interface design change | Full UI redesign, responsiveness, custom logo, all warnings fixed |
 | [v2.2.0](v2/v2.2.0.md) | 2026-05-08 | Interface design change | Version-variation switching support and documentation |
@@ -39,6 +40,6 @@ docs/versions/
 
 ## Current State
 
-Current version: `v2.4.0`
+Current version: `v2.5.0`
 Active major baseline: `v2.0.0`
-Next expected release: `v2.5.0` (interface design change) or `v2.4.1` (patch, if needed)
+Next expected release: `v2.6.0` (interface design change) or `v2.5.1` (patch, if needed)

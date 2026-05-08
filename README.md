@@ -1,13 +1,13 @@
 # ReqSmell Frontend
 
-Version 2.4 of the ReqSmell frontend.
+Version 2.5 of the ReqSmell frontend.
 
 This repository contains the web client for the ReqSmell requirements smell detection
 prototype. It is built with React, TypeScript, Vite, Redux Toolkit, Tailwind CSS,
 Recharts, jsPDF, and Vitest.
 
-`v2.0.0` is the frozen major baseline (first complete interface). `v2.1.0`–`v2.3.0` are
-interface design changes built on top of it. Read [docs/VERSIONING.md](docs/VERSIONING.md)
+`v2.0.0` is the frozen major baseline (first complete interface). `v2.1.0`-`v2.5.0`
+are interface design changes built on top of it. Read [docs/VERSIONING.md](docs/VERSIONING.md)
 to understand the three-tier version model.
 
 ## Start Here
@@ -22,7 +22,8 @@ If you are new to this project, read these documents in order:
 | [docs/VERSIONING.md](docs/VERSIONING.md) | The three-tier version model, folder structure, and release process |
 | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Fixing common setup, npm, Git, Vite, and Windows issues |
 | [docs/versions/index.md](docs/versions/index.md) | Full version history table |
-| [docs/versions/v2/v2.4.0.md](docs/versions/v2/v2.4.0.md) | Full documentation for version 2.4 (current) |
+| [docs/versions/v2/v2.5.0.md](docs/versions/v2/v2.5.0.md) | Full documentation for version 2.5 (current) |
+| [docs/versions/v2/v2.4.0.md](docs/versions/v2/v2.4.0.md) | Full documentation for version 2.4 |
 | [docs/versions/v2/v2.0.0.md](docs/versions/v2/v2.0.0.md) | Full documentation for the v2 baseline |
 | [docs/versions/v1/v1.0.0.md](docs/versions/v1/v1.0.0.md) | Full documentation for version 1 |
 
@@ -79,10 +80,10 @@ Show the current version or commit:
 npm run version:current
 ```
 
-Restore the current version-2.3 clean slate after the `v2.3.0` tag exists:
+Restore the current version-2.5 clean slate after the `v2.5.0` tag exists:
 
 ```powershell
-npm run version:use -- -Version v2.3 -CleanIgnored -Install
+npm run version:use -- -Version v2.5 -CleanIgnored -Install
 ```
 
 Rollback to version 1:
@@ -101,9 +102,9 @@ npm run version:use -- -Latest -Install
 
 | Field | Value |
 |---|---|
-| Current version | `2.3.0` |
+| Current version | `2.5.0` |
 | Active major baseline | `v2.0.0` |
-| Next expected release | `v2.4.0` (interface design change) |
+| Next expected release | `v2.6.0` (interface design change) or `v2.5.1` (patch, if needed) |
 
 Version 2 uses deterministic frontend preview reports so the dashboard can be reviewed
 before live backend integration. No LLM API is called from the browser and no requirement
@@ -113,9 +114,9 @@ data is stored in the browser.
 
 | Tier | Pattern | When to use |
 |---|---|---|
-| Major baseline | `vX.0.0` | System architecture changes — new major component, backend integration, or complete rebuild |
-| Interface design change | `vX.Y.0` | Visible design or flow change — layout, colours, a new step, a reworked component |
-| Patch | `vX.Y.Z` | Minimal, barely-noticeable — package update, typo fix, config tweak |
+| Major baseline | `vX.0.0` | System architecture changes - new major component, backend integration, or complete rebuild |
+| Interface design change | `vX.Y.0` | Visible design or flow change - layout, colours, a new step, a reworked component |
+| Patch | `vX.Y.Z` | Minimal, barely-noticeable - package update, typo fix, config tweak |
 
 Full explanation and release process: [docs/VERSIONING.md](docs/VERSIONING.md)
 

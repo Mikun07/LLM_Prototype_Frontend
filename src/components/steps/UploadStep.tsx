@@ -1,5 +1,6 @@
-import { ArrowRight, RotateCcw } from 'lucide-react'
+import { ArrowRight, ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react'
 import { useFileUpload } from '../../hooks/useFileUpload'
+import { usePagination } from '../../hooks/usePagination'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {
   setDetectedColumns,
@@ -21,10 +22,18 @@ const emptyDetection: ColumnDetection = {
 }
 
 function PreviewTable({ rows }: { readonly rows: RequirementRow[] }) {
+  const pagination = usePagination(rows, 10)
+  const firstVisibleRow = rows.length === 0 ? 0 : pagination.pageIndex * pagination.pageSize + 1
+  const lastVisibleRow =
+    rows.length === 0 ? 0 : Math.min(rows.length, firstVisibleRow + pagination.currentPage.length - 1)
+
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
-      <div className="border-b border-border bg-gradient-to-r from-brand-600 to-accent-500 px-4 py-3">
-        <p className="text-xs font-bold uppercase tracking-widest text-white/80">Preview — first {Math.min(rows.length, 20)} rows</p>
+      <div className="flex flex-col gap-1 border-b border-border bg-gradient-to-r from-brand-600 to-accent-500 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-xs font-bold uppercase tracking-widest text-white/80">CSV preview</p>
+        <p className="text-sm font-semibold text-white">
+          Showing {firstVisibleRow}-{lastVisibleRow} of {rows.length} rows
+        </p>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full text-left text-sm">
@@ -38,8 +47,14 @@ function PreviewTable({ rows }: { readonly rows: RequirementRow[] }) {
             </tr>
           </thead>
           <tbody>
-            {rows.slice(0, 20).map((row, i) => (
-              <tr className={['border-b border-border last:border-b-0', i % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'].join(' ')} key={row.id}>
+            {pagination.currentPage.map((row, i) => (
+              <tr
+                className={[
+                  'border-b border-border last:border-b-0',
+                  i % 2 === 0 ? 'bg-white' : 'bg-slate-50/50',
+                ].join(' ')}
+                key={`${row.id}-${pagination.pageIndex}-${i}`}
+              >
                 <td className="px-4 py-3 font-mono text-brand-600">{row.id}</td>
                 <td className="max-w-xl px-4 py-3 text-slate-700">{row.text}</td>
                 <td className="px-4 py-3 text-slate-600">{row.domain}</td>
@@ -49,6 +64,48 @@ function PreviewTable({ rows }: { readonly rows: RequirementRow[] }) {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="flex flex-col gap-3 border-t border-border px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2 text-sm text-slate-600">
+          <label className="font-semibold" htmlFor="upload-preview-page-size">
+            Rows per page
+          </label>
+          <select
+            className="h-9 rounded border border-border bg-white px-2"
+            id="upload-preview-page-size"
+            onChange={(event) => pagination.setPageSize(Number(event.target.value))}
+            value={pagination.pageSize}
+          >
+            {[10, 25, 50, 100].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex items-center justify-between gap-3 sm:justify-end">
+          <span className="text-sm font-semibold text-slate-600">
+            Page {pagination.pageIndex + 1} of {pagination.totalPages}
+          </span>
+          <div className="flex gap-2">
+            <Button
+              disabled={pagination.pageIndex === 0}
+              icon={<ChevronLeft aria-hidden="true" className="h-4 w-4" />}
+              onClick={() => pagination.setPageIndex(pagination.pageIndex - 1)}
+              variant="secondary"
+            >
+              Previous
+            </Button>
+            <Button
+              disabled={pagination.pageIndex >= pagination.totalPages - 1}
+              icon={<ChevronRight aria-hidden="true" className="h-4 w-4" />}
+              onClick={() => pagination.setPageIndex(pagination.pageIndex + 1)}
+              variant="secondary"
+            >
+              Next
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -83,7 +140,7 @@ export function UploadStep() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-[1fr_1fr_1fr_auto]">
             <div className="rounded-xl border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-brand-400">File</p>
-              <p className="mt-1 font-semibold text-slate-900 truncate">{file.name}</p>
+              <p className="mt-1 truncate font-semibold text-slate-900">{file.name}</p>
             </div>
             <div className="rounded-xl border border-teal-100 bg-gradient-to-br from-teal-50 to-white p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-teal-500">Size</p>
@@ -95,7 +152,11 @@ export function UploadStep() {
               <p className="text-xs font-semibold uppercase tracking-wide text-accent-500">Rows</p>
               <p className="mt-1 font-mono font-semibold text-slate-900">{file.rowCount}</p>
             </div>
-            <Button icon={<RotateCcw aria-hidden="true" className="h-4 w-4" />} onClick={upload.clearFile} variant="secondary">
+            <Button
+              icon={<RotateCcw aria-hidden="true" className="h-4 w-4" />}
+              onClick={upload.clearFile}
+              variant="secondary"
+            >
               Replace
             </Button>
           </div>
@@ -108,15 +169,14 @@ export function UploadStep() {
               {Object.entries(detectedColumns).map(([name, isPresent]) => (
                 <div
                   className={[
-                    'flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold uppercase',
+                    'rounded-xl px-3 py-2 text-sm font-bold uppercase',
                     isPresent
                       ? 'bg-teal-500 text-white shadow-sm shadow-teal-100'
-                      : 'bg-slate-100 text-slate-400',
+                      : 'bg-rose-500 text-white shadow-sm shadow-rose-100',
                   ].join(' ')}
                   key={name}
                 >
-                  <span>{isPresent ? '✓' : '–'}</span>
-                  <span>{name}</span>
+                  {name}
                 </div>
               ))}
             </div>
@@ -138,4 +198,3 @@ export function UploadStep() {
     </section>
   )
 }
-

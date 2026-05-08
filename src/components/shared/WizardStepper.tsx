@@ -30,11 +30,20 @@ export function WizardStepper({ currentStep }: WizardStepperProps) {
         const isComplete = index < activeIndex
         const colours = stepColours[index]
 
+        let stateColour: string
+        if (isActive) {
+          stateColour = colours.active
+        } else if (isComplete) {
+          stateColour = colours.complete
+        } else {
+          stateColour = colours.pending
+        }
+
         return (
           <div
             className={[
               'flex min-h-16 items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200',
-              isActive ? colours.active : (isComplete ? colours.complete : colours.pending),
+              stateColour,
             ].join(' ')}
             key={step.key}
           >

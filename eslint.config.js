@@ -21,6 +21,13 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       '@typescript-eslint/no-explicit-any': 'error',
+      'no-restricted-globals': [
+        'error',
+        {
+          name: 'window',
+          message: 'Use globalThis instead.',
+        },
+      ],
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
@@ -28,4 +35,3 @@ export default tseslint.config(
     },
   },
 )
-

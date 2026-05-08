@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface UsePaginationReturn<T> {
   currentPage: T[]
@@ -13,32 +13,38 @@ export function usePagination<T>(
   rows: T[],
   initialPageSize = 10,
 ): UsePaginationReturn<T> {
-  const [pageIndex, setPageIndexState] = useState(0)
-  const [pageSize, setPageSizeState] = useState(initialPageSize)
-  const totalPages = Math.max(1, Math.ceil(rows.length / pageSize))
+  const [requestedPageIndex, setRequestedPageIndex] = useState(0)
+  const [selectedPageSize, setSelectedPageSize] = useState(initialPageSize)
+  const totalPages = Math.max(1, Math.ceil(rows.length / selectedPageSize))
+  const clampedPageIndex = Math.min(requestedPageIndex, totalPages - 1)
+
+  useEffect(() => {
+    if (requestedPageIndex !== clampedPageIndex) {
+      setRequestedPageIndex(clampedPageIndex)
+    }
+  }, [clampedPageIndex, requestedPageIndex])
 
   const currentPage = useMemo(() => {
-    const start = pageIndex * pageSize
+    const start = clampedPageIndex * selectedPageSize
 
-    return rows.slice(start, start + pageSize)
-  }, [pageIndex, pageSize, rows])
+    return rows.slice(start, start + selectedPageSize)
+  }, [clampedPageIndex, selectedPageSize, rows])
 
   function setPageIndex(index: number): void {
-    setPageIndexState(Math.min(Math.max(index, 0), totalPages - 1))
+    setRequestedPageIndex(Math.min(Math.max(index, 0), totalPages - 1))
   }
 
   function setPageSize(size: number): void {
-    setPageSizeState(size)
-    setPageIndexState(0)
+    setSelectedPageSize(size)
+    setRequestedPageIndex(0)
   }
 
   return {
     currentPage,
-    pageIndex,
-    pageSize,
+    pageIndex: clampedPageIndex,
+    pageSize: selectedPageSize,
     totalPages,
     setPageIndex,
     setPageSize,
   }
 }
-
