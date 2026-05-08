@@ -9,30 +9,65 @@
 | Project version | `X.Y.Z` |
 | Status | Draft / Stable / Deprecated |
 
-## Summary
+## Plain-Language Summary
 
-Describe what this version represents and why it exists.
+Explain what this version is, why it exists, and what someone can do with it.
 
-## Included Work
+## Who This Version Is For
+
+| Person | What they can do with this version |
+|---|---|
+| New developer | |
+| Researcher | |
+| Maintainer | |
+| Reviewer | |
+
+## What Is Included
 
 | Area | Details |
 |---|---|
-| Feature | |
-| State | |
-| API | |
+| Project setup | |
 | UI | |
-| Tests | |
+| State management | |
+| API | |
+| Testing | |
+| Build tooling | |
 | Documentation | |
+| Dependencies | |
 
-## Important Files
+## What Is Not Included Yet
 
-| File | Purpose |
+| Missing feature | Expected future work |
 |---|---|
-| `path/to/file` | |
+| | |
 
-## Verification Performed
+## Required Software
 
-```bash
+| Software | Recommended version | Check command |
+|---|---|---|
+| Node.js | | `node --version` |
+| npm | | `npm --version` |
+| Git | | `git --version` |
+| PowerShell | | `$PSVersionTable.PSVersion` |
+
+## First-Time Setup
+
+```powershell
+git clone https://github.com/Mikun07/LLM_Prototype_Frontend.git
+cd LLM_Prototype_Frontend
+npm ci
+npm run dev
+```
+
+Open:
+
+```text
+http://127.0.0.1:5173/
+```
+
+## Verify This Version
+
+```powershell
 npm run type-check
 npm run lint
 npm run test -- --run
@@ -40,7 +75,63 @@ npm audit
 npm run build
 ```
 
-Record any failures, skipped checks, or environment assumptions here.
+Expected results:
+
+| Command | Expected result |
+|---|---|
+| `npm run type-check` | |
+| `npm run lint` | |
+| `npm run test -- --run` | |
+| `npm audit` | |
+| `npm run build` | |
+
+## Important Files
+
+| File | Purpose |
+|---|---|
+| `path/to/file` | |
+
+## npm Scripts
+
+| Script | Purpose |
+|---|---|
+| `npm run dev` | |
+| `npm run build` | |
+| `npm run preview` | |
+| `npm run lint` | |
+| `npm run type-check` | |
+| `npm run test -- --run` | |
+| `npm run version:list` | |
+| `npm run version:current` | |
+| `npm run version:use` | |
+
+## Restore This Version
+
+View the exact tagged snapshot:
+
+```powershell
+git fetch --tags
+git switch --detach vX.Y.Z
+npm ci
+```
+
+Restore this version and remove generated files:
+
+```powershell
+npm run version:use -- -Version vX.Y.Z -CleanIgnored -Install
+```
+
+Create an editable branch from this version:
+
+```powershell
+npm run version:use -- -Version vX.Y.Z -Branch work/from-vX.Y.Z -Install
+```
+
+Return to latest `main`:
+
+```powershell
+npm run version:use -- -Latest -Install
+```
 
 ## Dependency Notes
 
@@ -48,20 +139,10 @@ Record any failures, skipped checks, or environment assumptions here.
 |---|---|---|
 | `package-name` | `version` | |
 
-## Restore This Version
+## Backend Assumption
 
-```bash
-git fetch --tags
-git switch --detach vX.Y.Z
-npm ci
-```
-
-To create an editable branch:
-
-```bash
-git switch -c work/from-vX.Y.Z vX.Y.Z
-npm ci
-```
+Describe whether this version needs the backend, which URL it expects, and which API
+routes it calls.
 
 ## Known Limitations
 
@@ -71,9 +152,16 @@ npm ci
 
 ## Upgrade Notes
 
-Describe what a developer should know when moving from the previous version to this one.
+Explain what a developer should know when moving from the previous version to this one.
 
 ## Downgrade Notes
 
-Describe what a developer should know when returning from this version to the previous one.
+Explain what a developer should know before returning from this version to the previous
+one.
+
+## Recommended Next Work
+
+1. Add the next clear task.
+2. Add the expected tests.
+3. Add any documentation updates.
 

@@ -1,86 +1,174 @@
 # Versioning Guide
 
-This frontend uses Git as the source of truth for upgrade, downgrade, and clean-slate
-workflows. Each stable version is represented by an annotated tag, and each tag must have
-a matching document in `docs/versions/`.
+This guide explains how this project supports upgrade, downgrade, clean-slate restore, and
+future version releases.
+
+The project is still version 1:
+
+```text
+package.json version: 1.0.0
+stable Git tag: v1.0.0
+```
+
+Documentation can improve on `main` without creating a new product version. A new product
+version is created only when the package version is changed and a new Git tag is made.
+
+## Why Versioning Exists
+
+Versioning gives you three guarantees:
+
+| Guarantee | Meaning |
+|---|---|
+| Restore | You can return to a known working version |
+| Compare | You can see what changed between versions |
+| Experiment | You can create branches from old versions without damaging them |
+
+For this project, Git tags are the clean checkpoints.
+
+## Core Terms
+
+| Term | Meaning |
+|---|---|
+| Repository | The project folder tracked by Git |
+| Commit | A saved snapshot of tracked files |
+| Branch | A movable line of development, such as `main` |
+| Tag | A named fixed checkpoint, such as `v1.0.0` |
+| Detached HEAD | Viewing an exact tag or commit instead of editing on a branch |
+| Clean tree | No uncommitted tracked or untracked files |
+| Ignored files | Generated files that Git intentionally does not track |
 
 ## Version Model
 
 | Item | Meaning |
 |---|---|
 | `main` | Latest accepted project state |
-| `v1.0.0`, `v1.1.0`, `v2.0.0` | Stable snapshots that can be restored at any time |
-| `docs/versions/vX.Y.Z.md` | Human-readable document for a tagged version |
-| `package.json` version | npm project version matching the latest stable release being prepared |
+| `v1.0.0` | Stable version-one snapshot |
+| `docs/versions/vX.Y.Z.md` | Detailed document for a version |
+| `package.json` version | npm project version for the current stable version |
+| `package-lock.json` | Exact dependency versions for reproducible installs |
 
-Version numbers follow semantic versioning:
+## Version Number Rules
 
-| Change | Example | Use when |
+This project uses semantic versioning.
+
+| Change type | Example | Use when |
 |---|---|---|
-| Patch | `1.0.0` to `1.0.1` | Bug fixes, docs, small internal improvements |
+| Patch | `1.0.0` to `1.0.1` | Bug fixes, small docs, small internal improvements |
 | Minor | `1.0.0` to `1.1.0` | Backward-compatible features |
-| Major | `1.0.0` to `2.0.0` | Breaking architecture, API, or workflow changes |
+| Major | `1.0.0` to `2.0.0` | Breaking architecture, API, workflow, or data changes |
 
-## Quick Commands
+Because the user asked to keep this as version 1, the current documentation improvements
+do not change `1.0.0`.
 
-List available versions:
+## Available Version Commands
 
-```bash
-git fetch --tags
+List version tags:
+
+```powershell
 npm run version:list
 ```
 
-Show the version you are currently on:
+Show current tag or commit:
 
-```bash
+```powershell
 npm run version:current
 ```
 
-Use a specific version in a detached, read-only style checkout:
+Switch to version 1:
 
-```bash
+```powershell
+npm run version:use -- -Version v1.0.0
+```
+
+Switch to version 1 and reinstall dependencies:
+
+```powershell
 npm run version:use -- -Version v1.0.0 -Install
 ```
 
-Return to the latest `main` version:
+Switch to version 1, remove ignored generated files, and reinstall dependencies:
 
-```bash
-npm run version:use -- -Latest -Install
-```
-
-Create a branch from an older version so you can safely edit it:
-
-```bash
-npm run version:use -- -Version v1.0.0 -Branch fix/from-v1.0.0 -Install
-```
-
-## Clean Slate Workflow
-
-Use this when you want the working directory to match a version without leftover generated
-files.
-
-First, protect work you care about:
-
-```bash
-git status
-git switch -c backup/my-work
-git add .
-git commit -m "Backup work before version switch"
-```
-
-Then switch to a version and remove ignored generated files:
-
-```bash
+```powershell
 npm run version:use -- -Version v1.0.0 -CleanIgnored -Install
 ```
 
-`-CleanIgnored` removes ignored files only, such as `node_modules`, `dist`,
-`dev-server.log`, TypeScript build info, and generated config output. It does not remove
-tracked source files.
+Return to latest `main`:
 
-For a full reset to GitHub `main`, use this only after saving your work:
+```powershell
+npm run version:use -- -Latest -Install
+```
 
-```bash
+Create an editable branch from version 1:
+
+```powershell
+npm run version:use -- -Version v1.0.0 -Branch work/from-v1.0.0 -Install
+```
+
+Dry-run a version switch:
+
+```powershell
+npm run version:use -- -Version v1.0.0 -WhatIf
+```
+
+## Version Script Options
+
+The helper script lives at:
+
+```text
+scripts/use-version.ps1
+```
+
+Options:
+
+| Option | Meaning |
+|---|---|
+| `-Version vX.Y.Z` | Switch to a specific version tag |
+| `-Latest` | Switch to the latest `main` branch |
+| `-Branch branch-name` | Create a branch from the selected version |
+| `-Fetch` | Fetch remote branches and tags before switching |
+| `-CleanIgnored` | Remove ignored generated files with `git clean -fdX` |
+| `-Install` | Run `npm ci` after switching |
+| `-WhatIf` | Show what would happen without changing files |
+
+Use either `-Version` or `-Latest`, not both.
+
+The script stops if your working tree has uncommitted changes. This protects source files
+from being overwritten during a version switch.
+
+## Clean Slate Workflows
+
+### Clean Slate For Version 1
+
+Use this when you want the project to match version 1 and remove generated files:
+
+```powershell
+git status
+npm run version:use -- -Version v1.0.0 -CleanIgnored -Install
+```
+
+What happens:
+
+| Step | Action |
+|---|---|
+| Check Git state | Script refuses to continue if work is unsaved |
+| Switch version | Git checks out `v1.0.0` |
+| Clean ignored files | `node_modules`, `dist`, logs, and caches are removed |
+| Install dependencies | `npm ci` installs from the lockfile |
+
+### Clean Slate For Latest Main
+
+Use this when you want the newest documented state:
+
+```powershell
+git status
+npm run version:use -- -Latest -CleanIgnored -Install
+```
+
+### Exact Reset To GitHub Main
+
+Use this only after saving work:
+
+```powershell
 git fetch origin --tags --prune
 git switch main
 git reset --hard origin/main
@@ -88,21 +176,23 @@ git clean -fdX
 npm ci
 ```
 
-`git reset --hard` discards tracked local changes. `git clean -fdX` removes ignored
-generated files. Run `git status` first every time.
+Warning:
 
-## Creating A New Version
+| Command | Risk |
+|---|---|
+| `git reset --hard origin/main` | Deletes tracked local changes |
+| `git clean -fdX` | Deletes ignored generated files |
 
-1. Make code changes on a branch from `main`.
-2. Update the `version` field in `package.json`.
-3. Run `npm install --package-lock-only` so `package-lock.json` matches.
-4. Copy `docs/versions/TEMPLATE.md` to `docs/versions/vX.Y.Z.md`.
-5. Fill in the release date, summary, changed files, tests, known limitations, and
-   rollback instructions.
-6. Update `docs/versions/index.md`.
-7. Run the quality gates:
+Run `git status` first.
 
-```bash
+## Safe Upgrade Workflow
+
+Use this when moving from an older version to latest `main`.
+
+```powershell
+git status
+git fetch origin --tags --prune
+npm run version:use -- -Latest -Install
 npm run type-check
 npm run lint
 npm run test -- --run
@@ -110,38 +200,130 @@ npm audit
 npm run build
 ```
 
-8. Commit the version:
+If all checks pass, your local setup is healthy.
 
-```bash
+## Safe Downgrade Workflow
+
+Use this when returning to version 1.
+
+```powershell
+git status
+npm run version:use -- -Version v1.0.0 -CleanIgnored -Install
+npm run type-check
+npm run lint
+npm run test -- --run
+npm run build
+```
+
+If you plan to edit from version 1, create a branch:
+
+```powershell
+npm run version:use -- -Version v1.0.0 -Branch work/from-v1.0.0 -Install
+```
+
+Do not edit directly in detached HEAD if you want to keep the changes.
+
+## Creating A Future Version
+
+Use this process only when intentionally releasing a new version.
+
+1. Start from `main`.
+
+```powershell
+git switch main
+git pull origin main
+```
+
+2. Create a branch.
+
+```powershell
+git switch -c feature/version-work
+```
+
+3. Make the code or documentation changes.
+
+4. Update `package.json`.
+
+Example:
+
+```json
+"version": "1.1.0"
+```
+
+5. Sync the lockfile.
+
+```powershell
+npm install --package-lock-only
+```
+
+6. Create version documentation.
+
+```powershell
+Copy-Item docs\versions\TEMPLATE.md docs\versions\v1.1.0.md
+```
+
+7. Fill in the version document.
+
+8. Update `docs/versions/index.md`.
+
+9. Run all checks.
+
+```powershell
+npm run type-check
+npm run lint
+npm run test -- --run
+npm audit
+npm run build
+```
+
+10. Commit.
+
+```powershell
 git add .
-git commit -m "Release vX.Y.Z"
+git commit -m "Release v1.1.0"
 ```
 
-9. Create an annotated tag:
+11. Tag.
 
-```bash
-git tag -a vX.Y.Z -m "Version X.Y.Z"
+```powershell
+git tag -a v1.1.0 -m "Version 1.1.0"
 ```
 
-10. Push both the branch and tag:
+12. Push.
 
-```bash
+```powershell
 git push origin main
-git push origin vX.Y.Z
+git push origin v1.1.0
 ```
 
-## Rules For Version Documents
+## Version Document Requirements
 
-Every file in `docs/versions/` should answer these questions:
+Every stable version must have a document under `docs/versions/`.
 
-| Question | Required answer |
+Each version document must include:
+
+| Section | Required content |
 |---|---|
-| What is this version? | Release summary and scope |
-| What changed? | Feature, config, dependency, and documentation changes |
-| How was it verified? | Exact commands and results |
-| How do I restore it? | Git checkout and install commands |
-| What should I watch for? | Known limitations, risks, or compatibility notes |
+| Summary | What the version represents |
+| Included work | Features, tooling, docs, dependencies, and config changes |
+| Important files | Files a new developer should inspect first |
+| Setup steps | How to install and run that exact version |
+| Test steps | Commands used to verify it |
+| Restore steps | How to return to that version |
+| Known limitations | What is missing or risky |
+| Upgrade notes | What changed from the previous version |
+| Downgrade notes | What to know before returning to an older version |
 
-Keep version documents practical. A future reader should be able to understand why the
-version exists, what state it represents, and how to reproduce it without guessing.
+## Relationship Between Tags And Docs
+
+Version 1 was tagged before the expanded documentation was added. That means:
+
+| Item | Meaning |
+|---|---|
+| `v1.0.0` tag | Exact original version-one code snapshot |
+| `main` after documentation updates | Same product version with better manuals |
+| `docs/versions/v1.0.0.md` | Human-readable description of version one |
+
+This is acceptable because the user requested better documentation while keeping the
+project as version 1.
 
