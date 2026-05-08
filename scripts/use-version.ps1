@@ -16,8 +16,50 @@ function Stop-WithMessage {
   exit 1
 }
 
+function Get-AvailableVersionTags {
+  @(git tag --list 'v*' | Sort-Object)
+}
+
+function Resolve-VersionTag {
+  param([string]$RequestedVersion)
+
+  $raw = $RequestedVersion.Trim()
+  $withoutPrefix = if ($raw.StartsWith('v')) { $raw.Substring(1) } else { $raw }
+  $candidates = New-Object System.Collections.Generic.List[string]
+
+  if ($raw.StartsWith('v')) {
+    $candidates.Add($raw)
+  } else {
+    $candidates.Add("v$raw")
+  }
+
+  if ($withoutPrefix -match '^\d+\.\d+$') {
+    $candidates.Add("v$withoutPrefix.0")
+  }
+
+  if ($withoutPrefix -match '^\d+$') {
+    $candidates.Add("v$withoutPrefix.0.0")
+  }
+
+  $availableTags = Get-AvailableVersionTags
+
+  foreach ($candidate in ($candidates | Select-Object -Unique)) {
+    if ($availableTags -contains $candidate) {
+      return $candidate
+    }
+  }
+
+  $availableText = if ($availableTags.Count -gt 0) {
+    $availableTags -join ', '
+  } else {
+    'no version tags found'
+  }
+
+  Stop-WithMessage "Version '$RequestedVersion' was not found. Available versions: $availableText"
+}
+
 if ([string]::IsNullOrWhiteSpace($Version) -and -not $Latest) {
-  Stop-WithMessage 'Provide -Version vX.Y.Z or -Latest.'
+  Stop-WithMessage 'Provide -Version vX.Y.Z, -Version vX.Y, -Version X.Y, or -Latest.'
 }
 
 if (-not [string]::IsNullOrWhiteSpace($Version) -and $Latest) {
@@ -41,15 +83,15 @@ if ($Latest) {
     git switch main
   }
 } else {
-  git rev-parse --verify "refs/tags/$Version" *> $null
+  $resolvedVersion = Resolve-VersionTag -RequestedVersion $Version
 
   if ([string]::IsNullOrWhiteSpace($Branch)) {
-    if ($PSCmdlet.ShouldProcess($Version, 'switch to version tag in detached HEAD')) {
-      git switch --detach $Version
+    if ($PSCmdlet.ShouldProcess($resolvedVersion, 'switch to version tag in detached HEAD')) {
+      git switch --detach $resolvedVersion
     }
   } else {
-    if ($PSCmdlet.ShouldProcess($Branch, "create branch from $Version")) {
-      git switch -c $Branch $Version
+    if ($PSCmdlet.ShouldProcess($Branch, "create branch from $resolvedVersion")) {
+      git switch -c $Branch $resolvedVersion
     }
   }
 }
@@ -67,4 +109,3 @@ if ($Install) {
 }
 
 git describe --tags --always --dirty
-

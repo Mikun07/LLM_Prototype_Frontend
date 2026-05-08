@@ -22,7 +22,7 @@ export function App() {
           </div>
           <div className="rounded border border-border bg-white px-4 py-3 text-right">
             <p className="text-sm text-slate-500">Version</p>
-            <p className="font-mono text-lg font-semibold text-brand-900">2.1.0</p>
+            <p className="font-mono text-lg font-semibold text-brand-900">2.2.0</p>
           </div>
         </header>
 

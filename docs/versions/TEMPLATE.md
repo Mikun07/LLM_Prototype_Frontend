@@ -24,8 +24,12 @@ State whether this version is:
 | v2-line adjustment | The version is normal work after `v2.0.0`, such as `v2.1.0` or `v2.2.0` |
 | New major baseline | The version intentionally starts a new major line such as `v3.0.0` or `v4.0.0` |
 
-For ordinary changes after `v2.1.0`, use `v2.2.0`, then `v2.3.0`, then `v2.4.0`.
+For ordinary changes after `v2.2.0`, use `v2.3.0`, then `v2.4.0`, then `v2.5.0`.
 Do not move the `v1.0.0` or `v2.0.0` baseline tags.
+
+Every variation must be switchable by tag and documented in this folder. The version
+helper accepts exact tags and shorthand such as `v2.3`, `2.3`, and `v2.3.0` when the tag
+exists.
 
 ## Who This Version Is For
 

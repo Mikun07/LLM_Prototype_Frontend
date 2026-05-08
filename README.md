@@ -1,13 +1,14 @@
 # ReqSmell Frontend
 
-Version 2.1 of the ReqSmell frontend.
+Version 2.2 of the ReqSmell frontend.
 
 This repository contains the web client for the ReqSmell requirements smell detection
 prototype. It is built with React, TypeScript, Vite, Redux Toolkit, Tailwind CSS,
 Recharts, jsPDF, and Vitest.
 
-Version `v2.0.0` is the first usable interface baseline. Version `v2.1.0` keeps that
-baseline intact and adds the clarified version-control policy for future adjustments.
+Version `v2.0.0` is the first usable interface baseline. Version `v2.1.0` clarified the
+version-control policy, and version `v2.2.0` adds explicit switching support and
+documentation for version variations.
 
 ## Start Here
 
@@ -20,7 +21,8 @@ If you are new to this project, read these documents in order:
 | [docs/TESTING.md](docs/TESTING.md) | Running checks and understanding what each test command proves |
 | [docs/VERSIONING.md](docs/VERSIONING.md) | Upgrading, downgrading, restoring clean slates, and creating future versions |
 | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Fixing common setup, npm, Git, Vite, and Windows issues |
-| [docs/versions/v2.1.0.md](docs/versions/v2.1.0.md) | Full documentation for version 2.1 |
+| [docs/versions/v2.2.0.md](docs/versions/v2.2.0.md) | Full documentation for version 2.2 |
+| [docs/versions/v2.1.0.md](docs/versions/v2.1.0.md) | Version-control policy documentation for version 2.1 |
 | [docs/versions/v2.0.0.md](docs/versions/v2.0.0.md) | Baseline documentation for version 2 |
 | [docs/versions/v1.0.0.md](docs/versions/v1.0.0.md) | Rollback documentation for version 1 |
 
@@ -77,10 +79,10 @@ Show the current version or commit:
 npm run version:current
 ```
 
-Restore the current version-2.1 clean slate after the `v2.1.0` tag exists:
+Restore the current version-2.2 clean slate after the `v2.2.0` tag exists:
 
 ```powershell
-npm run version:use -- -Version v2.1.0 -CleanIgnored -Install
+npm run version:use -- -Version v2.2 -CleanIgnored -Install
 ```
 
 Rollback to version 1:
@@ -100,7 +102,7 @@ npm run version:use -- -Latest -Install
 The npm project version is:
 
 ```text
-2.1.0
+2.2.0
 ```
 
 The stable version-two baseline tag is:
@@ -112,7 +114,7 @@ v2.0.0
 The current post-baseline adjustment tag is:
 
 ```text
-v2.1.0
+v2.2.0
 ```
 
 Version 2 contains deterministic frontend preview reports so the dashboard interface can
@@ -132,7 +134,8 @@ The project now treats `v1.0.0` and `v2.0.0` as baseline releases.
 | `v4.0.0` | Later major baseline when another major scope change is intentionally created |
 
 Going forward, do not move the `v2.0.0` tag for ordinary changes. Create a new version
-such as `v2.1.0` or `v2.2.0` instead.
+such as `v2.2.0` or `v2.3.0` instead. The version helper can switch to any existing
+variation tag, including shorthand such as `v2.2` or `2.2`.
 
 ## Project Structure
 

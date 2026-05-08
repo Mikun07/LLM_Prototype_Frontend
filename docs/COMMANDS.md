@@ -23,21 +23,24 @@ This document explains every project command in plain language.
 
 ## Version Commands
 
-Version `v1.0.0` and `v2.0.0` are frozen baselines. The first ordinary adjustment based
-on version 2 is `v2.1.0`. Future ordinary work should be released as `v2.2.0`,
-`v2.3.0`, and so on until a new major baseline such as `v3.0.0` is intentionally created.
+Version `v1.0.0` and `v2.0.0` are frozen baselines. Ordinary work based on version 2 is
+released as `v2.1.0`, `v2.2.0`, `v2.3.0`, and so on until a new major baseline such as
+`v3.0.0` is intentionally created.
 
 | Command | What it does |
 |---|---|
 | `npm run version:list` | Lists all available Git version tags |
 | `npm run version:current` | Shows the nearest Git tag, commit, and dirty state |
-| `npm run version:use -- -Version v2.1.0` | Switches to the current version-2 line in detached mode |
-| `npm run version:use -- -Version v2.1.0 -Install` | Switches to `v2.1.0` and runs `npm ci` |
-| `npm run version:use -- -Version v2.1.0 -CleanIgnored -Install` | Restores a clean current version-2-line slate and dependencies |
+| `npm run version:use -- -Version v2.2.0` | Switches to the current version-2 line in detached mode |
+| `npm run version:use -- -Version v2.2 -Install` | Switches to `v2.2.0` and runs `npm ci` |
+| `npm run version:use -- -Version 2.2 -CleanIgnored -Install` | Restores a clean current version-2-line slate and dependencies |
 | `npm run version:use -- -Version v2.0.0 -CleanIgnored -Install` | Restores the frozen version-2 baseline |
 | `npm run version:use -- -Version v1.0.0 -CleanIgnored -Install` | Rolls back to the version-1 environment baseline |
 | `npm run version:use -- -Latest -Install` | Switches back to `main` and installs dependencies |
-| `npm run version:use -- -Version v2.1.0 -Branch work/from-v2.1.0` | Creates an editable branch from the current version-2 line |
+| `npm run version:use -- -Version v2.2 -Branch work/from-v2.2.0` | Creates an editable branch from the current version-2 line |
+
+The version helper accepts exact tags and shorthand. For example, `v2.2.0`, `v2.2`, and
+`2.2` all resolve to `v2.2.0` when that tag exists.
 
 ## Git Commands
 
@@ -47,12 +50,12 @@ on version 2 is `v2.1.0`. Future ordinary work should be released as `v2.2.0`,
 | `git log --oneline --decorate -5` | Shows recent commits and tags |
 | `git fetch origin --tags --prune` | Updates remote branches and version tags |
 | `git switch main` | Moves to the main branch |
-| `git switch --detach v2.1.0` | Views the current version-2 line exactly as tagged |
+| `git switch --detach v2.2.0` | Views the current version-2 line exactly as tagged |
 | `git switch --detach v2.0.0` | Views the frozen version-2 baseline exactly as tagged |
-| `git switch -c branch-name v2.1.0` | Creates a new editable branch from the current version-2 line |
+| `git switch -c branch-name v2.2.0` | Creates a new editable branch from the current version-2 line |
 | `git tag --list` | Lists version tags |
 | `git push origin main` | Pushes the main branch to GitHub |
-| `git push origin v2.1.0` | Pushes the version `v2.1.0` tag to GitHub |
+| `git push origin v2.2.0` | Pushes the version `v2.2.0` tag to GitHub |
 
 ## Script Details
 
@@ -105,7 +108,7 @@ For a clean version-two restore:
 
 ```powershell
 git status
-npm run version:use -- -Version v2.1.0 -CleanIgnored -Install
+npm run version:use -- -Version v2.2 -CleanIgnored -Install
 ```
 
 For returning to latest work:

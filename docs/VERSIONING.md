@@ -6,8 +6,8 @@ future version releases.
 The current project version is:
 
 ```text
-package.json version: 2.1.0
-stable Git tag: v2.1.0
+package.json version: 2.2.0
+stable Git tag: v2.2.0
 ```
 
 Version 1 remains available as `v1.0.0` for rollback. Version 2 baseline remains available
@@ -44,7 +44,8 @@ For this project, Git tags are the clean checkpoints.
 | Item | Meaning |
 |---|---|
 | `main` | Latest accepted project state |
-| `v2.1.0` | Current version-control policy adjustment on the version-2 baseline |
+| `v2.2.0` | Current version-variation switching and documentation update |
+| `v2.1.0` | Version-control policy adjustment on the version-2 baseline |
 | `v2.0.0` | Frozen version-2 interface baseline |
 | `v1.0.0` | Original environment baseline |
 | `v2.1.0`, `v2.2.0`, `v2.3.0` | Future changes based on the version-2 baseline |
@@ -66,7 +67,8 @@ Baseline releases are frozen checkpoints. They must remain restorable.
 
 Do not rewrite or move baseline tags. If a change modifies the current baseline behavior,
 documentation, tests, or interface, release it as the next version in the current major
-line. This policy update is `v2.1.0`; the next normal release should be `v2.2.0`.
+line. The policy update was `v2.1.0`; this version-variation switching update is
+`v2.2.0`; the next normal release should be `v2.3.0`.
 
 ## Version Number Rules
 
@@ -98,19 +100,19 @@ npm run version:current
 Switch to the current version-2 line:
 
 ```powershell
-npm run version:use -- -Version v2.1.0
+npm run version:use -- -Version v2.2.0
 ```
 
 Switch to the current version-2 line and reinstall dependencies:
 
 ```powershell
-npm run version:use -- -Version v2.1.0 -Install
+npm run version:use -- -Version v2.2 -Install
 ```
 
 Switch to the current version-2 line, remove ignored generated files, and reinstall dependencies:
 
 ```powershell
-npm run version:use -- -Version v2.1.0 -CleanIgnored -Install
+npm run version:use -- -Version 2.2 -CleanIgnored -Install
 ```
 
 Rollback to version 1:
@@ -128,14 +130,44 @@ npm run version:use -- -Latest -Install
 Create an editable branch from version 2:
 
 ```powershell
-npm run version:use -- -Version v2.1.0 -Branch work/from-v2.1.0 -Install
+npm run version:use -- -Version v2.2 -Branch work/from-v2.2.0 -Install
 ```
 
 Dry-run a version switch:
 
 ```powershell
-npm run version:use -- -Version v2.1.0 -WhatIf
+npm run version:use -- -Version v2.2 -WhatIf
 ```
+
+## Switching Between Version Variations
+
+You can switch between any existing variation tag, not only between baselines.
+
+Examples:
+
+| From | To | Command |
+|---|---|---|
+| `v2.0.0` | `v2.1.0` | `npm run version:use -- -Version v2.1 -CleanIgnored -Install` |
+| `v2.1.0` | `v2.2.0` | `npm run version:use -- -Version v2.2 -CleanIgnored -Install` |
+| `v2.2.0` | `v2.0.0` | `npm run version:use -- -Version v2.0 -CleanIgnored -Install` |
+| Future `v1.1.0` | Future `v1.2.0` | `npm run version:use -- -Version v1.2 -CleanIgnored -Install` |
+
+The version helper accepts these equivalent formats when the matching tag exists:
+
+| Input | Resolves to |
+|---|---|
+| `v2.2.0` | `v2.2.0` |
+| `v2.2` | `v2.2.0` |
+| `2.2` | `v2.2.0` |
+
+Run this first if you are unsure which variations exist:
+
+```powershell
+npm run version:list
+```
+
+Every released variation must have its own file in `docs/versions/`, for example
+`docs/versions/v2.2.0.md`.
 
 ## Version Script Options
 
@@ -170,7 +202,7 @@ Use this when you want the project to match the current version-2 line and remov
 
 ```powershell
 git status
-npm run version:use -- -Version v2.1.0 -CleanIgnored -Install
+npm run version:use -- -Version v2.2 -CleanIgnored -Install
 ```
 
 What happens:
@@ -178,7 +210,7 @@ What happens:
 | Step | Action |
 |---|---|
 | Check Git state | Script refuses to continue if work is unsaved |
-| Switch version | Git checks out `v2.1.0` |
+| Switch version | Git checks out `v2.2.0` |
 | Clean ignored files | `node_modules`, `dist`, logs, and caches are removed |
 | Install dependencies | `npm ci` installs from the lockfile |
 
@@ -214,12 +246,13 @@ Run `git status` first.
 
 ## Safe Upgrade Workflow
 
-Use this when moving from version 1 or the `v2.0.0` baseline to the current version-2 line.
+Use this when moving from version 1, the `v2.0.0` baseline, or any older `v2.x` variation
+to the current version-2 line.
 
 ```powershell
 git status
 git fetch origin --tags --prune
-npm run version:use -- -Version v2.1.0 -Install
+npm run version:use -- -Version v2.2 -Install
 npm run type-check
 npm run lint
 npm run test -- --run
@@ -258,9 +291,9 @@ First choose the release number:
 
 | Situation | Version to create |
 |---|---|
-| Any normal adjustment or change after `v2.1.0` | `v2.2.0` |
-| Next normal adjustment after `v2.2.0` | `v2.3.0` |
-| Another normal adjustment after `v2.3.0` | `v2.4.0` |
+| Any normal adjustment or change after `v2.2.0` | `v2.3.0` |
+| Next normal adjustment after `v2.3.0` | `v2.4.0` |
+| Another normal adjustment after `v2.4.0` | `v2.5.0` |
 | Major new baseline after version 2 line | `v3.0.0` |
 | Later major baseline after version 3 line | `v4.0.0` |
 
@@ -284,10 +317,10 @@ git switch -c feature/version-work
 
 4. Update `package.json`.
 
-Example for the next normal change after `v2.1.0`:
+Example for the next normal change after `v2.2.0`:
 
 ```json
-"version": "2.2.0"
+"version": "2.3.0"
 ```
 
 5. Sync the lockfile.
@@ -299,7 +332,7 @@ npm install --package-lock-only
 6. Create version documentation.
 
 ```powershell
-Copy-Item docs\versions\TEMPLATE.md docs\versions\v2.2.0.md
+Copy-Item docs\versions\TEMPLATE.md docs\versions\v2.3.0.md
 ```
 
 7. Fill in the version document.
@@ -320,20 +353,20 @@ npm run build
 
 ```powershell
 git add .
-git commit -m "Release v2.2.0"
+git commit -m "Release v2.3.0"
 ```
 
 11. Tag.
 
 ```powershell
-git tag -a v2.2.0 -m "Version 2.2.0"
+git tag -a v2.3.0 -m "Version 2.3.0"
 ```
 
 12. Push.
 
 ```powershell
 git push origin main
-git push origin v2.2.0
+git push origin v2.3.0
 ```
 
 ## Version Document Requirements
