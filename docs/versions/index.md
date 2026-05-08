@@ -2,6 +2,7 @@
 
 | Version | Date | Tag | Commit | Summary |
 |---|---|---|---|---|
+| [v2.3.0](v2.3.0.md) | 2026-05-08 | `v2.3.0` | Same as tag | UI redesign, responsiveness, custom logo, all warnings fixed |
 | [v2.2.0](v2.2.0.md) | 2026-05-08 | `v2.2.0` | Same as tag | Version-variation switching support and documentation |
 | [v2.1.0](v2.1.0.md) | 2026-05-08 | `v2.1.0` | Same as tag | Version-control policy adjustment for the v2 line |
 | [v2.0.0](v2.0.0.md) | 2026-05-08 | `v2.0.0` | Same as tag | First usable frontend interface |
@@ -25,6 +26,6 @@ Going forward, all ordinary changes to the version-2 baseline must be released a
 
 ## Current Documentation State
 
-The current project version is `2.2.0`. Version `v2.0.0` remains available as the
+The current project version is `2.3.0`. Version `v2.0.0` remains available as the
 version-2 baseline, and `v1.0.0` remains available for rollback to the original
 environment baseline.

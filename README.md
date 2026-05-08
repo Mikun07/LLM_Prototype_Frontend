@@ -7,8 +7,8 @@ prototype. It is built with React, TypeScript, Vite, Redux Toolkit, Tailwind CSS
 Recharts, jsPDF, and Vitest.
 
 Version `v2.0.0` is the first usable interface baseline. Version `v2.1.0` clarified the
-version-control policy, and version `v2.2.0` adds explicit switching support and
-documentation for version variations.
+version-control policy, `v2.2.0` adds explicit switching support, and `v2.3.0` delivers
+a full UI redesign, responsiveness, a custom logo, and resolves all linter warnings.
 
 ## Start Here
 
@@ -21,6 +21,7 @@ If you are new to this project, read these documents in order:
 | [docs/TESTING.md](docs/TESTING.md) | Running checks and understanding what each test command proves |
 | [docs/VERSIONING.md](docs/VERSIONING.md) | Upgrading, downgrading, restoring clean slates, and creating future versions |
 | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Fixing common setup, npm, Git, Vite, and Windows issues |
+| [docs/versions/v2.3.0.md](docs/versions/v2.3.0.md) | Full documentation for version 2.3 |
 | [docs/versions/v2.2.0.md](docs/versions/v2.2.0.md) | Full documentation for version 2.2 |
 | [docs/versions/v2.1.0.md](docs/versions/v2.1.0.md) | Version-control policy documentation for version 2.1 |
 | [docs/versions/v2.0.0.md](docs/versions/v2.0.0.md) | Baseline documentation for version 2 |
@@ -79,10 +80,10 @@ Show the current version or commit:
 npm run version:current
 ```
 
-Restore the current version-2.2 clean slate after the `v2.2.0` tag exists:
+Restore the current version-2.3 clean slate after the `v2.3.0` tag exists:
 
 ```powershell
-npm run version:use -- -Version v2.2 -CleanIgnored -Install
+npm run version:use -- -Version v2.3 -CleanIgnored -Install
 ```
 
 Rollback to version 1:
@@ -102,7 +103,7 @@ npm run version:use -- -Latest -Install
 The npm project version is:
 
 ```text
-2.2.0
+2.3.0
 ```
 
 The stable version-two baseline tag is:
@@ -114,7 +115,7 @@ v2.0.0
 The current post-baseline adjustment tag is:
 
 ```text
-v2.2.0
+v2.3.0
 ```
 
 Version 2 contains deterministic frontend preview reports so the dashboard interface can
