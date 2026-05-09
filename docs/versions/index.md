@@ -15,6 +15,7 @@ docs/versions/
 
 | Version | Date | Tier | Summary |
 |---|---|---|---|
+| [v2.8.0](v2/v2.8.0.md) | 2026-05-09 | Interface design change | UI polish — gradient strips removed, real "View Results" flow, PDF/sample utilities, test expansion |
 | [v2.7.0](v2/v2.7.0.md) | 2026-05-09 | Interface design change | Global toast alerts for upload and analysis error handling |
 | [v2.6.0](v2/v2.6.0.md) | 2026-05-09 | Interface design change | Frontend connected to backend upload, analysis polling, and HTTP status handling |
 | [v2.5.0](v2/v2.5.0.md) | 2026-05-08 | Interface design change | CSV upload preview pagination and frontend policy guard |
@@ -42,6 +43,6 @@ docs/versions/
 
 ## Current State
 
-Current version: `v2.7.0`
+Current version: `v2.8.0`
 Active major baseline: `v2.0.0`
-Next expected release: `v2.8.0` (interface design change) or `v2.7.1` (patch, if needed)
+Next expected release: `v2.9.0` (interface design change) or `v2.8.1` (patch, if needed)
