@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { parseCsvFile } from '../utils/csvParser'
+import { getApiErrorMessage, uploadCsv } from '../api/client'
 import type { ParsedFile } from '../types'
 
 interface UseFileUploadReturn {
@@ -25,10 +25,25 @@ export function useFileUpload(
       return
     }
 
-    const result = await parseCsvFile(selectedFile)
-    setError(result.error)
-    setFile(result.parsedFile)
-    onParsedFile(result.parsedFile)
+    try {
+      const response = await uploadCsv(selectedFile)
+      const parsedFile: ParsedFile = {
+        metadata: response.file,
+        rows: response.requirements,
+        detectedColumns: response.detectedColumns,
+        detection: response.detection,
+      }
+
+      setError(null)
+      setFile(parsedFile)
+      onParsedFile(parsedFile)
+    } catch (error) {
+      const message = getApiErrorMessage(error)
+
+      setError(message)
+      setFile(null)
+      onParsedFile(null)
+    }
   }
 
   function handleDrop(event: React.DragEvent): void {
@@ -68,4 +83,3 @@ export function useFileUpload(
     clearFile,
   }
 }
-

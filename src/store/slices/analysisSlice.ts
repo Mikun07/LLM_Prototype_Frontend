@@ -56,6 +56,15 @@ const analysisSlice = createSlice({
       state.comparison = null
       state.progress = createProgressState()
     },
+    prepareRun(state) {
+      state.runId = null
+      state.status = 'running'
+      state.error = null
+      state.claudeReport = null
+      state.chatgptReport = null
+      state.comparison = null
+      state.progress = createProgressState()
+    },
     updateProgress(
       state,
       action: PayloadAction<{
@@ -68,16 +77,18 @@ const analysisSlice = createSlice({
     completeRun(
       state,
       action: PayloadAction<{
-        claudeReport: ModelReport
-        chatgptReport: ModelReport
-        comparison: ComparisonReport
+        status?: AnalysisStatus
+        claudeReport: ModelReport | null
+        chatgptReport: ModelReport | null
+        comparison: ComparisonReport | null
+        error?: string | null
       }>,
     ) {
-      state.status = 'complete'
+      state.status = action.payload.status ?? 'complete'
       state.claudeReport = action.payload.claudeReport
       state.chatgptReport = action.payload.chatgptReport
       state.comparison = action.payload.comparison
-      state.error = null
+      state.error = action.payload.error ?? null
     },
     setPipelineError(
       state,
@@ -101,6 +112,7 @@ const analysisSlice = createSlice({
 })
 
 export const {
+  prepareRun,
   startRun,
   updateProgress,
   completeRun,

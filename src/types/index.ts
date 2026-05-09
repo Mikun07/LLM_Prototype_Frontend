@@ -20,6 +20,8 @@ export type PipelineKey =
 
 export type PipelineStatus = 'queued' | 'running' | 'complete' | 'error'
 
+export type RunStatus = 'running' | 'complete' | 'error'
+
 export interface FileMetadata {
   name: string
   size: number
@@ -159,16 +161,24 @@ export interface ComparisonReport {
 export interface AnalyseRequest {
   requirements: RequirementRow[]
   config: RunConfig
+  fileName: string
 }
 
 export interface UploadResponse {
   file: FileMetadata
   requirements: RequirementRow[]
   detectedColumns: string[]
+  detection: ColumnDetection
+}
+
+export interface StartRunResponse {
+  runId: string
+  status: RunStatus
 }
 
 export interface RunStatusResponse {
   runId: string
+  status: RunStatus
   progress: Record<PipelineKey, PipelineProgress>
   claudeReport: ModelReport | null
   chatgptReport: ModelReport | null
