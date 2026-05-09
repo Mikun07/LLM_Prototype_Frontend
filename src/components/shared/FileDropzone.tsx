@@ -22,16 +22,16 @@ export function FileDropzone({
       <label
         aria-label="Upload requirements CSV file"
         className={[
-          'relative flex min-h-56 cursor-pointer flex-col items-center justify-center gap-4 overflow-hidden rounded-2xl border-2 border-dashed p-8 text-center transition-all duration-200',
+          'relative flex min-h-56 cursor-pointer flex-col items-center justify-center gap-4 overflow-hidden rounded-2xl border-2 border-dashed p-8 text-center shadow-[0_18px_42px_-30px_rgba(79,70,229,0.55)] transition-all duration-200',
           isDragging
-            ? 'border-brand-500 bg-gradient-to-br from-brand-50 to-accent-50 scale-[1.01]'
-            : 'border-slate-300 bg-white hover:border-brand-400 hover:bg-brand-50/50',
+            ? 'scale-[1.01] border-brand-400 bg-gradient-to-br from-white via-brand-50/80 to-fuchsia-50'
+            : 'border-white/80 bg-gradient-to-br from-white via-sky-50/60 to-fuchsia-50/70 hover:border-brand-300 hover:shadow-[0_22px_52px_-30px_rgba(79,70,229,0.7)]',
         ].join(' ')}
         onDragLeave={onDragLeave}
         onDragOver={onDragOver}
         onDrop={onDrop}
       >
-        <div className={['flex h-16 w-16 items-center justify-center rounded-2xl transition-all', isDragging ? 'bg-brand-600 text-white scale-110' : 'bg-gradient-brand text-white'].join(' ')}>
+        <div className={['flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg shadow-brand-200/50 transition-all', isDragging ? 'scale-110 bg-brand-600 text-white' : 'bg-gradient-brand text-white'].join(' ')}>
           <FileUp aria-hidden="true" className="h-8 w-8" />
         </div>
         <div>
@@ -40,7 +40,7 @@ export function FileDropzone({
             Drag and drop your file here, or <span className="font-semibold text-brand-600">click to browse</span>
           </span>
         </div>
-        <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-400">
+        <span className="rounded-full border border-white/70 bg-white/80 px-3 py-1 text-xs font-bold text-slate-500 shadow-sm">
           .csv files only
         </span>
         <input accept=".csv,text/csv" className="sr-only" onChange={onFileSelect} type="file" />
@@ -53,4 +53,3 @@ export function FileDropzone({
     </div>
   )
 }
-

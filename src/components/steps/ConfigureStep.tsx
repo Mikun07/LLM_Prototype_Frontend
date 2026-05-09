@@ -28,6 +28,13 @@ function Tip({ children }: { readonly children: React.ReactNode }) {
   )
 }
 
+const panelClass =
+  'relative overflow-hidden rounded-2xl border border-white/80 bg-gradient-to-br from-white via-sky-50/60 to-fuchsia-50/70 p-5 shadow-[0_18px_42px_-30px_rgba(79,70,229,0.55)]'
+
+function PanelStrip() {
+  return null
+}
+
 export function ConfigureStep() {
   const dispatch = useAppDispatch()
   const { config, configReviewed, requirements, detectedColumns } = useAppSelector((state) => state.wizard)
@@ -63,29 +70,32 @@ export function ConfigureStep() {
     <section className="flex flex-col gap-6">
 
       {/* LLM selection */}
-      <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+      <div className={panelClass}>
+        <PanelStrip />
         <div className="flex items-center gap-2">
-          <Bot aria-hidden="true" className="h-5 w-5 text-brand-500" />
-          <h2 className="font-display text-base font-bold text-slate-800">Choose your AI model(s)</h2>
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/85 text-brand-700 shadow-sm">
+            <Bot aria-hidden="true" className="h-5 w-5" />
+          </span>
+          <h2 className="font-display text-base font-bold text-slate-900">Choose your AI model(s)</h2>
         </div>
-        <p className="mt-1 text-sm text-slate-500">Select one or both models. Running both lets you compare their results side-by-side on the dashboard.</p>
+        <p className="mt-2 text-sm text-slate-600">Select one or both models. Running both lets you compare their results side-by-side on the dashboard.</p>
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {MODEL_OPTIONS.map((model) => {
             const selected = config.selectedModels.includes(model.id)
             return (
               <button
                 className={[
-                  'flex items-start gap-3 rounded-xl border-2 p-4 text-left transition-all',
+                  'flex items-start gap-3 rounded-xl border p-4 text-left shadow-sm transition-all',
                   selected
-                    ? 'border-brand-500 bg-brand-50 shadow-sm'
-                    : 'border-border bg-white hover:border-brand-300 hover:bg-slate-50',
+                    ? 'border-brand-300 bg-white/95 shadow-md shadow-brand-100'
+                    : 'border-white/70 bg-white/55 hover:border-brand-300 hover:bg-white/90',
                 ].join(' ')}
                 key={model.id}
                 onClick={() => toggleModel(model.id)}
                 type="button"
                 aria-pressed={selected}
               >
-                <span className={['mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all', selected ? 'border-brand-500 bg-brand-500' : 'border-slate-300'].join(' ')}>
+                <span className={['mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all', selected ? 'border-brand-500 bg-gradient-brand' : 'border-slate-300 bg-white'].join(' ')}>
                   {selected && <CheckCircle2 aria-hidden="true" className="h-4 w-4 text-white" />}
                 </span>
                 <span>
@@ -99,10 +109,13 @@ export function ConfigureStep() {
       </div>
 
       {/* Smell type selection */}
-      <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+      <div className={panelClass}>
+        <PanelStrip />
         <div className="flex items-center gap-2">
-          <Zap aria-hidden="true" className="h-5 w-5 text-accent-500" />
-          <h2 className="font-display text-base font-bold text-slate-800">Choose smell type(s) to detect</h2>
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/85 text-accent-600 shadow-sm">
+            <Zap aria-hidden="true" className="h-5 w-5" />
+          </span>
+          <h2 className="font-display text-base font-bold text-slate-900">Choose smell type(s) to detect</h2>
         </div>
         {smellTypesAutoDetected ? (
           <p className="mt-1 text-sm text-slate-500">
@@ -117,17 +130,17 @@ export function ConfigureStep() {
             return (
               <button
                 className={[
-                  'flex items-start gap-3 rounded-xl border-2 p-4 text-left transition-all',
+                  'flex items-start gap-3 rounded-xl border p-4 text-left shadow-sm transition-all',
                   selected
-                    ? 'border-accent-500 bg-accent-50 shadow-sm'
-                    : 'border-border bg-white hover:border-accent-300 hover:bg-slate-50',
+                    ? 'border-accent-300 bg-white/95 shadow-md shadow-accent-100'
+                    : 'border-white/70 bg-white/55 hover:border-accent-300 hover:bg-white/90',
                 ].join(' ')}
                 key={smell.id}
                 onClick={() => toggleSmellType(smell.id)}
                 type="button"
                 aria-pressed={selected}
               >
-                <span className={['mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all', selected ? 'border-accent-500 bg-accent-500' : 'border-slate-300'].join(' ')}>
+                <span className={['mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all', selected ? 'border-accent-500 bg-gradient-to-r from-amber-400 to-fuchsia-500' : 'border-slate-300 bg-white'].join(' ')}>
                   {selected && <CheckCircle2 aria-hidden="true" className="h-4 w-4 text-white" />}
                 </span>
                 <span>
@@ -141,12 +154,13 @@ export function ConfigureStep() {
       </div>
 
       {/* Advanced settings */}
-      <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
-        <h2 className="font-display text-base font-bold text-slate-800">Advanced settings</h2>
-        <p className="mt-1 text-sm text-slate-500">These control how the AI behaves. The defaults work well for most projects only change them if you have a specific reason.</p>
+      <div className={panelClass}>
+        <PanelStrip />
+        <h2 className="font-display text-base font-bold text-slate-900">Advanced settings</h2>
+        <p className="mt-1 text-sm text-slate-600">These control how the AI behaves. The defaults work well for most projects; only change them if you have a specific reason.</p>
 
         <div className="mt-5 grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <div>
+          <div className="rounded-xl border border-white/70 bg-white/70 p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <label className="font-semibold text-slate-700" htmlFor="temperature">
                 AI creativity level
@@ -172,7 +186,7 @@ export function ConfigureStep() {
             </Tip>
           </div>
 
-          <div>
+          <div className="rounded-xl border border-white/70 bg-white/70 p-4 shadow-sm">
             <div className="flex items-center justify-between">
               <label className="font-semibold text-slate-700" htmlFor="maxGroupSize">
                 Inconsistency batch size
@@ -202,8 +216,14 @@ export function ConfigureStep() {
 
       {/* Review checkbox */}
       <div
-        className={['flex cursor-pointer items-start gap-4 rounded-2xl border-2 p-5 transition-all', configReviewed ? 'border-teal-400 bg-teal-50' : 'border-border bg-white'].join(' ')}
+        className={[
+          'relative flex cursor-pointer items-start gap-4 overflow-hidden rounded-2xl border p-5 shadow-[0_18px_42px_-30px_rgba(20,184,166,0.55)] transition-all',
+          configReviewed
+            ? 'border-teal-300 bg-gradient-to-br from-white via-teal-50/80 to-emerald-50'
+            : 'border-white/80 bg-gradient-to-br from-white via-sky-50/60 to-fuchsia-50/70',
+        ].join(' ')}
       >
+        <PanelStrip />
         <input
           checked={configReviewed}
           className="mt-1 h-4 w-4 accent-brand-600"

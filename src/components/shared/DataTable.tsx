@@ -35,10 +35,10 @@ export function DataTable<T>({
   }
 
   return (
-    <div className="overflow-hidden rounded border border-border bg-white">
+    <div className="overflow-hidden rounded-xl border border-border bg-white shadow-sm">
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse text-left text-sm">
-          <thead className="bg-brand-50 text-xs uppercase text-brand-900">
+          <thead className="bg-slate-50 text-xs text-slate-600">
             <tr>
               {columns.map((column) => {
                 const key = String(column.key)
@@ -50,7 +50,7 @@ export function DataTable<T>({
                       column.header
                     ) : (
                       <Button
-                        className="h-auto px-0 py-0 text-xs uppercase"
+                        className="h-auto px-0 py-0 text-xs"
                         icon={
                           isActive && sortDirection === 'asc' ? (
                             <ArrowUp aria-hidden="true" className="h-3.5 w-3.5" />
@@ -71,7 +71,13 @@ export function DataTable<T>({
           </thead>
           <tbody>
             {rows.map((row, index) => (
-              <tr className="border-b border-border last:border-b-0" key={getRowKey(row, index)}>
+              <tr
+                className={[
+                  'border-b border-border last:border-b-0',
+                  index % 2 === 0 ? 'bg-white' : 'bg-slate-50/40',
+                ].join(' ')}
+                key={getRowKey(row, index)}
+              >
                 {columns.map((column) => (
                   <td className="max-w-xl px-4 py-3 align-top text-slate-700" key={String(column.key)}>
                     {column.render(row)}

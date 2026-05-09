@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { getApiErrorMessage, getRunStatus, startAnalysis } from '../api/client'
+import {
+  getApiErrorMessage,
+  getReadableRunErrorMessage,
+  getRunStatus,
+  startAnalysis,
+} from '../api/client'
 import { pipelines } from '../constants/pipelines'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import {
@@ -54,10 +59,18 @@ export function useAnalysisRun(): UseAnalysisRunReturn {
 
   function applyRunStatus(response: RunStatusResponse): void {
     pipelines.forEach((pipeline) => {
+      const pipelineProgress = response.progress[pipeline.key]
+
       dispatch(
         updateProgress({
           pipeline: pipeline.key,
-          progress: response.progress[pipeline.key],
+          progress: {
+            ...pipelineProgress,
+            error:
+              pipelineProgress.error === null
+                ? null
+                : getReadableRunErrorMessage(pipelineProgress.error),
+          },
         }),
       )
     })
@@ -68,7 +81,9 @@ export function useAnalysisRun(): UseAnalysisRunReturn {
       .map((pipeline) => progressFor(response, pipeline.key))
       .filter((error): error is string => error !== null && error.trim() !== '')
 
-    return errors[0] ?? 'The analysis run ended with an error.'
+    return errors[0] === undefined
+      ? 'The analysis run ended with an error.'
+      : getReadableRunErrorMessage(errors[0])
   }
 
   async function pollRun(runId: string): Promise<void> {

@@ -101,9 +101,12 @@ export function ResultsSection<T extends object>({
   }
 
   return (
-    <section className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-4">
-        <h3 className="font-display text-xl font-semibold text-brand-900">{title}</h3>
+    <section className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-white/80 bg-gradient-to-br from-white via-sky-50/60 to-fuchsia-50/70 p-5 shadow-[0_18px_42px_-30px_rgba(79,70,229,0.55)]">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h3 className="font-display text-xl font-bold text-slate-900">{title}</h3>
+          <p className="mt-1 text-sm font-semibold text-slate-500">{sortedRows.length} visible rows</p>
+        </div>
         <Button
           icon={<Download aria-hidden="true" className="h-4 w-4" />}
           onClick={() => download(rows, filename)}
@@ -113,12 +116,12 @@ export function ResultsSection<T extends object>({
         </Button>
       </div>
 
-      <div className="grid grid-cols-[1fr_repeat(3,180px)] gap-3">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-[1fr_repeat(3,180px)]">
         <div className="relative">
           <label className="sr-only" htmlFor={`search-${title}`}>Search {title}</label>
           <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
           <input
-            className="h-10 w-full rounded border border-border bg-white pl-9 pr-3 text-sm"
+            className="h-10 w-full rounded-xl border border-white/70 bg-white/80 pl-9 pr-3 text-sm shadow-sm outline-none transition focus:border-brand-300 focus:ring-2 focus:ring-brand-100"
             id={`search-${title}`}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search text and explanations"
@@ -130,7 +133,7 @@ export function ResultsSection<T extends object>({
           <div key={String(key)}>
             <label className="sr-only" htmlFor={`filter-${String(key)}-${title}`}>Filter by {String(key)}</label>
             <select
-              className="h-10 w-full rounded border border-border bg-white px-3 text-sm"
+              className="h-10 w-full rounded-xl border border-white/70 bg-white/80 px-3 text-sm shadow-sm outline-none transition focus:border-brand-300 focus:ring-2 focus:ring-brand-100"
               id={`filter-${String(key)}-${title}`}
               onChange={(event) =>
                 setFilters((current) => ({
@@ -151,7 +154,7 @@ export function ResultsSection<T extends object>({
         ))}
       </div>
 
-      <div className="flex items-center gap-2 text-sm text-slate-600">
+      <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600">
         <Badge value={`${sortedRows.length} rows`} />
         <span>Page {pagination.pageIndex + 1} of {pagination.totalPages}</span>
       </div>
@@ -165,12 +168,12 @@ export function ResultsSection<T extends object>({
         sortKey={sortKey}
       />
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2 text-sm text-slate-600">
           <label className="sr-only" htmlFor="page-size">Rows per page</label>
           <span aria-hidden="true">Rows</span>
           <select
-            className="h-9 rounded border border-border bg-white px-2"
+            className="h-9 rounded-xl border border-white/70 bg-white/80 px-2 shadow-sm outline-none transition focus:border-brand-300 focus:ring-2 focus:ring-brand-100"
             id="page-size"
             onChange={(event) => pagination.setPageSize(Number(event.target.value))}
             value={pagination.pageSize}

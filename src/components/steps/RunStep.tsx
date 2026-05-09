@@ -1,22 +1,21 @@
-import { AlertTriangle, ArrowLeft, CheckCircle2, Clock, Cpu, Loader2, X } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, BarChart3, CheckCircle2, Clock, Cpu, Loader2, X } from 'lucide-react'
+import { getReadableRunErrorMessage } from '../../api/client'
 import { useAnalysisRun } from '../../hooks/useAnalysisRun'
 import { pipelines } from '../../constants/pipelines'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { setStep } from '../../store/slices/wizardSlice'
 import { Button } from '../shared/Button'
 
-const pipelineCardStyles: Record<string, { border: string; bg: string; accent: string }> = {
-  claudeAmbiguity: { border: 'border-brand-200', bg: 'bg-brand-50', accent: 'text-brand-600' },
+const pipelineCardStyles: Record<string, { accent: string; strip: string }> = {
+  claudeAmbiguity: { accent: 'text-brand-600', strip: 'from-brand-400 to-fuchsia-500' },
   claudeInconsistency: {
-    border: 'border-accent-200',
-    bg: 'bg-accent-50',
     accent: 'text-accent-600',
+    strip: 'from-amber-400 to-fuchsia-500',
   },
-  chatgptAmbiguity: { border: 'border-teal-200', bg: 'bg-teal-50', accent: 'text-teal-600' },
+  chatgptAmbiguity: { accent: 'text-teal-600', strip: 'from-teal-400 to-emerald-500' },
   chatgptInconsistency: {
-    border: 'border-indigo-200',
-    bg: 'bg-indigo-50',
     accent: 'text-indigo-600',
+    strip: 'from-sky-400 to-indigo-500',
   },
 }
 
@@ -40,7 +39,6 @@ export function RunStep() {
   const dispatch = useAppDispatch()
   const { cancelRun, isRunning } = useAnalysisRun()
   const analysisStatus = useAppSelector((state) => state.analysis.status)
-  const analysisError = useAppSelector((state) => state.analysis.error)
   const progress = useAppSelector((state) => state.analysis.progress)
   const { selectedModels, selectedSmellTypes } = useAppSelector((state) => state.wizard.config)
   const requirements = useAppSelector((state) => state.wizard.requirements)
@@ -65,13 +63,11 @@ export function RunStep() {
   const anyRunning = activePipelines.some(
     (pipeline) => progress[pipeline.key].status === 'running',
   )
-  const pipelineErrors = activePipelines
-    .map((pipeline) => ({
-      label: pipeline.label,
-      error: progress[pipeline.key].error,
-    }))
-    .filter((item): item is { label: string; error: string } => item.error !== null)
-  const anyError = analysisStatus === 'error' || pipelineErrors.length > 0
+  const hasPipelineError = activePipelines.some(
+    (pipeline) =>
+      progress[pipeline.key].status === 'error' || progress[pipeline.key].error !== null,
+  )
+  const anyError = analysisStatus === 'error' || hasPipelineError
 
   let statusLabel: string
   if (anyError) {
@@ -86,12 +82,12 @@ export function RunStep() {
 
   return (
     <section className="flex flex-col gap-6">
-      <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl border border-white/80 bg-gradient-to-br from-white via-sky-50/60 to-fuchsia-50/70 p-5 shadow-[0_18px_42px_-30px_rgba(79,70,229,0.55)]">
         <div className="flex items-center gap-3">
           <div
             className={[
-              'flex h-10 w-10 shrink-0 items-center justify-center rounded-full',
-              anyError ? 'bg-rose-100' : allDone ? 'bg-teal-100' : 'bg-brand-100',
+              'flex h-10 w-10 shrink-0 items-center justify-center rounded-full shadow-sm',
+              anyError ? 'bg-rose-100' : allDone ? 'bg-teal-100' : 'bg-white/85',
             ].join(' ')}
           >
             {anyError ? (
@@ -109,7 +105,7 @@ export function RunStep() {
             )}
           </div>
           <div>
-            <p className="font-display text-base font-bold text-slate-800">{statusLabel}</p>
+            <p className="font-display text-base font-bold text-slate-900">{statusLabel}</p>
             <p className="text-sm text-slate-500">
               {activePipelines.length} pipeline
               {activePipelines.length === 1 ? '' : 's'} - {requirements.length} requirement
@@ -129,26 +125,14 @@ export function RunStep() {
         </div>
       </div>
 
-      {analysisError === null && pipelineErrors.length === 0 ? null : (
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800 shadow-sm">
-          <p className="font-bold">The backend reported a problem.</p>
-          {analysisError === null ? null : <p className="mt-1">{analysisError}</p>}
-          {pipelineErrors.map((item) => (
-            <p className="mt-1" key={item.label}>
-              <span className="font-semibold">{item.label}:</span> {item.error}
-            </p>
-          ))}
-        </div>
-      )}
-
-      <div className={['grid grid-cols-1 gap-4', activePipelines.length > 1 ? 'sm:grid-cols-2' : ''].join(' ')}>
+      <div className="grid grid-cols-1 gap-4">
         {activePipelines.map((pipeline) => {
           const pipelineProgress = progress[pipeline.key]
           const style = pipelineCardStyles[pipeline.key]
 
           return (
             <div
-              className={['rounded-2xl border p-5 shadow-sm', style.border, style.bg].join(' ')}
+              className="relative overflow-hidden rounded-2xl border border-white/80 bg-gradient-to-br from-white via-sky-50/60 to-fuchsia-50/70 p-5 shadow-[0_18px_42px_-30px_rgba(79,70,229,0.55)]"
               key={pipeline.key}
             >
               <div className="mb-4 flex items-center gap-3">
@@ -176,7 +160,7 @@ export function RunStep() {
               </p>
               {pipelineProgress.error === null ? null : (
                 <p className="mt-2 text-xs font-medium text-rose-700">
-                  {pipelineProgress.error}
+                  {getReadableRunErrorMessage(pipelineProgress.error)}
                 </p>
               )}
             </div>
@@ -184,7 +168,7 @@ export function RunStep() {
         })}
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Button
           disabled={isRunning}
           icon={<ArrowLeft aria-hidden="true" className="h-4 w-4" />}
@@ -193,15 +177,25 @@ export function RunStep() {
         >
           Back
         </Button>
-        {isRunning ? (
-          <Button
-            icon={<X aria-hidden="true" className="h-4 w-4" />}
-            onClick={cancelRun}
-            variant="secondary"
-          >
-            Cancel
-          </Button>
-        ) : null}
+        <div className="flex flex-col gap-3 sm:flex-row">
+          {isRunning ? (
+            <Button
+              icon={<X aria-hidden="true" className="h-4 w-4" />}
+              onClick={cancelRun}
+              variant="secondary"
+            >
+              Cancel
+            </Button>
+          ) : null}
+          {allDone ? (
+            <Button
+              icon={<BarChart3 aria-hidden="true" className="h-4 w-4" />}
+              onClick={() => dispatch(setStep('dashboard'))}
+            >
+              View Results
+            </Button>
+          ) : null}
+        </div>
       </div>
     </section>
   )

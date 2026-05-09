@@ -3,7 +3,8 @@ import type {
   InconsistencyResult,
   ModelReport as ModelReportType,
 } from '../../types'
-import { formatModelName, formatPercentage } from '../../utils/formatters'
+import { formatModelName } from '../../utils/formatters'
+import { downloadModelReportPdf } from '../../utils/reportPdf'
 import { BarChart } from '../charts/BarChart'
 import { DonutChart } from '../charts/DonutChart'
 import { Badge } from '../shared/Badge'
@@ -18,22 +19,21 @@ interface ModelReportProps {
 }
 
 const ambiguityColumns: DataTableColumn<AmbiguityResult>[] = [
-  { key: 'id', header: 'ID', render: (row) => <span className="font-mono">{row.id}</span>, sortableValue: (row) => row.id },
-  { key: 'text', header: 'Text', render: (row) => row.text, sortableValue: (row) => row.text },
-  { key: 'domain', header: 'Domain', render: (row) => row.domain, sortableValue: (row) => row.domain },
-  { key: 'type', header: 'Type', render: (row) => row.type, sortableValue: (row) => String(row.type) },
-  { key: 'label', header: 'Label', render: (row) => <Badge value={row.label} />, sortableValue: (row) => row.label },
-  { key: 'confidence', header: 'Confidence', render: (row) => <Badge value={row.confidence} />, sortableValue: (row) => row.confidence },
-  { key: 'explanation', header: 'Explanation', render: (row) => row.explanation, sortableValue: (row) => row.explanation },
+  {
+    key: 'id',
+    header: 'ID',
+    render: (row) => <span className="font-mono font-semibold text-slate-700">{row.id}</span>,
+    sortableValue: (row) => row.id,
+  },
+  { key: 'text', header: 'Requirement', render: (row) => row.text, sortableValue: (row) => row.text },
+  { key: 'label', header: 'Result', render: (row) => <Badge value={row.label} />, sortableValue: (row) => row.label },
+  { key: 'explanation', header: 'Reason', render: (row) => row.explanation, sortableValue: (row) => row.explanation },
   {
     key: 'suggestion',
-    header: 'Suggestion',
+    header: 'Suggested rewrite',
     render: (row) =>
       row.label === 'SMELL' ? (
-        <details>
-          <summary className="cursor-pointer font-medium text-brand-700">View</summary>
-          <p className="mt-2 text-slate-700">{row.suggestion}</p>
-        </details>
+        <span>{row.suggestion}</span>
       ) : (
         <span className="text-slate-400">None</span>
       ),
@@ -41,56 +41,66 @@ const ambiguityColumns: DataTableColumn<AmbiguityResult>[] = [
 ]
 
 const inconsistencyColumns: DataTableColumn<InconsistencyResult>[] = [
-  { key: 'reqAId', header: 'Req A', render: (row) => <span className="font-mono">{row.reqAId}</span>, sortableValue: (row) => row.reqAId },
-  { key: 'reqBId', header: 'Req B', render: (row) => <span className="font-mono">{row.reqBId}</span>, sortableValue: (row) => row.reqBId },
-  { key: 'reqAText', header: 'Req A text', render: (row) => row.reqAText, sortableValue: (row) => row.reqAText },
-  { key: 'reqBText', header: 'Req B text', render: (row) => row.reqBText, sortableValue: (row) => row.reqBText },
-  { key: 'domain', header: 'Domain', render: (row) => row.domain, sortableValue: (row) => row.domain },
-  { key: 'label', header: 'Label', render: (row) => <Badge value={row.label} />, sortableValue: (row) => row.label },
-  { key: 'confidence', header: 'Confidence', render: (row) => <Badge value={row.confidence} />, sortableValue: (row) => row.confidence },
-  { key: 'explanation', header: 'Explanation', render: (row) => row.explanation, sortableValue: (row) => row.explanation },
+  {
+    key: 'pair',
+    header: 'Pair',
+    render: (row) => (
+      <span className="font-mono font-semibold text-slate-700">
+        {row.reqAId} / {row.reqBId}
+      </span>
+    ),
+    sortableValue: (row) => `${row.reqAId}-${row.reqBId}`,
+  },
+  {
+    key: 'requirements',
+    header: 'Requirements',
+    render: (row) => (
+      <div className="flex flex-col gap-2">
+        <p>
+          <span className="font-mono text-slate-500">{row.reqAId}</span> {row.reqAText}
+        </p>
+        <p>
+          <span className="font-mono text-slate-500">{row.reqBId}</span> {row.reqBText}
+        </p>
+      </div>
+    ),
+    sortableValue: (row) => row.reqAText,
+  },
+  { key: 'label', header: 'Result', render: (row) => <Badge value={row.label} />, sortableValue: (row) => row.label },
+  { key: 'explanation', header: 'Reason', render: (row) => row.explanation, sortableValue: (row) => row.explanation },
+  {
+    key: 'suggestion',
+    header: 'Suggested fix',
+    render: (row) => row.suggestion || <span className="text-slate-400">None</span>,
+  },
 ]
 
 export function ModelReport({ report }: ModelReportProps) {
   const modelName = formatModelName(report.model)
   const donutData = [
     { name: 'Clean', value: report.stats.clean, color: '#16a34a' },
-    { name: 'Smells', value: report.stats.smells, color: '#dc2626' },
+    { name: 'Needs review', value: report.stats.smells, color: '#e11d48' },
   ]
   const domainData = report.stats.byDomain.map((row) => ({
     name: row.name,
     clean: row.clean,
     smells: row.smells,
   }))
-  const smellTypeData = report.stats.bySmellType.map((row) => ({
-    name: row.name,
-    value: row.smells,
-  }))
-  const confidenceData = ['HIGH', 'MEDIUM', 'LOW'].map((level) => ({
-    name: level,
-    value: [
-      ...report.ambiguityResults,
-      ...report.inconsistencyResults,
-    ].filter((row) => row.confidence === level).length,
-  }))
-
   return (
     <section className="flex flex-col gap-6">
       <ReportHeader
-        subtitle={`${report.fileName} - ${formatPercentage(report.stats.smellRate)} smell rate`}
+        onDownloadPdf={() => downloadModelReportPdf(report)}
+        subtitle={`${modelName} report`}
         title={`${modelName} Report`}
       />
       <SummaryPanel stats={report.stats} />
-      <div className="grid grid-cols-3 gap-4">
-        <BreakdownTable rows={report.stats.bySmellType} title="By smell type" />
-        <BreakdownTable rows={report.stats.byDomain} title="By domain" />
-        <BreakdownTable rows={report.stats.byRequirementType} title="By requirement type" />
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <DonutChart ariaLabel={`${modelName} clean versus needs review`} data={donutData} title="Clean vs needs review" />
+        <BarChart ariaLabel={`${modelName} review counts by domain`} data={domainData} mode="stacked" title="Results by domain" />
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <DonutChart ariaLabel={`${modelName} clean versus smells`} data={donutData} title="Clean vs smells" />
-        <BarChart ariaLabel={`${modelName} smell counts by domain`} data={domainData} mode="stacked" title="Smells by domain" />
-        <BarChart ariaLabel={`${modelName} smell counts by type`} data={smellTypeData} title="Smells by type" />
-        <BarChart ariaLabel={`${modelName} confidence distribution`} data={confidenceData} title="Confidence distribution" />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <BreakdownTable rows={report.stats.bySmellType} title="By check type" />
+        <BreakdownTable rows={report.stats.byDomain} title="By domain" />
       </div>
       <ResultsSection
         columns={ambiguityColumns}
@@ -99,7 +109,7 @@ export function ModelReport({ report }: ModelReportProps) {
         getRowKey={(row) => row.id}
         rows={report.ambiguityResults}
         searchFields={['text', 'explanation']}
-        title="Ambiguity Results"
+        title="Ambiguity checks"
       />
       <ResultsSection
         columns={inconsistencyColumns}
@@ -108,7 +118,7 @@ export function ModelReport({ report }: ModelReportProps) {
         getRowKey={(row, index) => `${row.reqAId}-${row.reqBId}-${index}`}
         rows={report.inconsistencyResults}
         searchFields={['reqAText', 'reqBText', 'explanation']}
-        title="Inconsistency Results"
+        title="Inconsistency checks"
       />
     </section>
   )
