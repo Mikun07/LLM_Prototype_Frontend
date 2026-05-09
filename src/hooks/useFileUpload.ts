@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { getApiErrorMessage, uploadCsv } from '../api/client'
+import { useAppDispatch } from '../store/hooks'
+import { addToast } from '../store/slices/toastSlice'
 import type { ParsedFile } from '../types'
 
 interface UseFileUploadReturn {
@@ -16,6 +18,7 @@ interface UseFileUploadReturn {
 export function useFileUpload(
   onParsedFile: (parsedFile: ParsedFile | null) => void,
 ): UseFileUploadReturn {
+  const dispatch = useAppDispatch()
   const [isDragging, setIsDragging] = useState(false)
   const [file, setFile] = useState<ParsedFile | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -43,6 +46,13 @@ export function useFileUpload(
       setError(message)
       setFile(null)
       onParsedFile(null)
+      dispatch(
+        addToast({
+          tone: 'error',
+          title: 'Upload failed',
+          message,
+        }),
+      )
     }
   }
 

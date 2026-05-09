@@ -3,6 +3,7 @@ import { ConfigureStep } from './components/steps/ConfigureStep'
 import { RunStep } from './components/steps/RunStep'
 import { UploadStep } from './components/steps/UploadStep'
 import { ReqSmellLogo } from './components/shared/ReqSmellLogo'
+import { ToastViewport } from './components/shared/ToastViewport'
 import { WizardStepper } from './components/shared/WizardStepper'
 import { useAppSelector } from './store/hooks'
 
@@ -11,6 +12,7 @@ export function App() {
 
   return (
     <main className="min-h-screen bg-gradient-surface px-4 py-6 text-slate-950 sm:px-6 md:px-10 md:py-8">
+      <ToastViewport />
       <section className="mx-auto flex max-w-7xl flex-col gap-6 md:gap-8">
         <header className="relative overflow-hidden rounded-2xl bg-gradient-brand p-6 text-white shadow-lg md:p-8">
           <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

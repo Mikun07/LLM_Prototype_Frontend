@@ -10,6 +10,7 @@ import {
   setError,
   updateProgress,
 } from '../store/slices/analysisSlice'
+import { addToast } from '../store/slices/toastSlice'
 import { setStep } from '../store/slices/wizardSlice'
 import type { PipelineKey, RunStatusResponse } from '../types'
 
@@ -100,6 +101,13 @@ export function useAnalysisRun(): UseAnalysisRunReturn {
             error: message,
           }),
         )
+        dispatch(
+          addToast({
+            tone: 'error',
+            title: 'Analysis failed',
+            message,
+          }),
+        )
         return
       }
 
@@ -137,6 +145,13 @@ export function useAnalysisRun(): UseAnalysisRunReturn {
         const message = getApiErrorMessage(error)
 
         dispatch(setError(message))
+        dispatch(
+          addToast({
+            tone: 'error',
+            title: 'Analysis could not start',
+            message,
+          }),
+        )
       }
     } finally {
       setLocalRunning(false)
