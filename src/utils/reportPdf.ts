@@ -8,6 +8,7 @@ import type {
   ModelReport,
   SmellLabel,
 } from '../types'
+import { appVersionLabel } from '../constants/appVersion'
 import { formatModelName, formatPercentage } from './formatters'
 
 type PdfField = {
@@ -38,6 +39,7 @@ type ReviewSelection = {
 }
 
 const appName = 'ReqSmell'
+const appVersionStamp = `${appName} ${appVersionLabel}`
 const pageMargin = 16
 const pageTop = 42
 const footerHeight = 20
@@ -140,7 +142,18 @@ function addFallbackHeader(doc: jsPDF): number {
   setTextColor(doc, [255, 255, 255])
   doc.text(appName, pageMargin, 21)
 
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(8.5)
+  doc.text(appVersionStamp, getPageWidth(doc) - pageMargin, 21, { align: 'right' })
+
   return 39
+}
+
+function addVersionStamp(doc: jsPDF, y: number, color: [number, number, number]): void {
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(8.5)
+  setTextColor(doc, color)
+  doc.text(appVersionStamp, getPageWidth(doc) - pageMargin, y, { align: 'right' })
 }
 
 async function addHeader(doc: jsPDF, title: string, subtitle: string): Promise<number> {
@@ -152,6 +165,7 @@ async function addHeader(doc: jsPDF, title: string, subtitle: string): Promise<n
     const imageHeight = imageWidth * (image.naturalHeight / image.naturalWidth)
 
     doc.addImage(image, 'PNG', 6, 8, imageWidth, imageHeight)
+    addVersionStamp(doc, 20, [255, 255, 255])
     y = 8 + imageHeight + 12
   } catch {
     y = addFallbackHeader(doc)
@@ -166,6 +180,7 @@ async function addHeader(doc: jsPDF, title: string, subtitle: string): Promise<n
   doc.setFontSize(9)
   setTextColor(doc, [71, 85, 105])
   doc.text(subtitle, pageMargin, y + 7)
+  addVersionStamp(doc, y + 7, [71, 85, 105])
 
   return y + 18
 }

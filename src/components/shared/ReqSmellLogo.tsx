@@ -1,3 +1,5 @@
+import { appVersionLabel } from '../../constants/appVersion'
+
 interface ReqSmellLogoProps {
   readonly className?: string
 }
@@ -79,7 +81,7 @@ export function ReqSmellLogo({ className = '' }: ReqSmellLogoProps) {
       {/* Wordmark */}
       <div className="flex flex-col leading-none">
         <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-indigo-200">
-          v2.8.0
+          {appVersionLabel}
         </span>
         <span className="font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
           ReqSmell
