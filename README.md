@@ -1,12 +1,12 @@
 # ReqSmell Frontend
 
-Version 2.7 of the ReqSmell frontend.
+Version 2.8 of the ReqSmell frontend.
 
 This repository contains the web client for the ReqSmell requirements smell detection
 prototype. It is built with React, TypeScript, Vite, Redux Toolkit, Tailwind CSS,
 Recharts, jsPDF, and Vitest.
 
-`v2.0.0` is the frozen major baseline (first complete interface). `v2.1.0`-`v2.7.0`
+`v2.0.0` is the frozen major baseline (first complete interface). `v2.1.0`-`v2.8.0`
 are interface design changes built on top of it. Read [docs/VERSIONING.md](docs/VERSIONING.md)
 to understand the three-tier version model.
 
@@ -22,7 +22,8 @@ If you are new to this project, read these documents in order:
 | [docs/VERSIONING.md](docs/VERSIONING.md) | The three-tier version model, folder structure, and release process |
 | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Fixing common setup, npm, Git, Vite, and Windows issues |
 | [docs/versions/index.md](docs/versions/index.md) | Full version history table |
-| [docs/versions/v2/v2.7.0.md](docs/versions/v2/v2.7.0.md) | Full documentation for version 2.7 (current) |
+| [docs/versions/v2/v2.8.0.md](docs/versions/v2/v2.8.0.md) | Full documentation for version 2.8 (current) |
+| [docs/versions/v2/v2.7.0.md](docs/versions/v2/v2.7.0.md) | Full documentation for version 2.7 |
 | [docs/versions/v2/v2.6.0.md](docs/versions/v2/v2.6.0.md) | Full documentation for version 2.6 |
 | [docs/versions/v2/v2.5.0.md](docs/versions/v2/v2.5.0.md) | Full documentation for version 2.5 |
 | [docs/versions/v2/v2.4.0.md](docs/versions/v2/v2.4.0.md) | Full documentation for version 2.4 |
@@ -82,10 +83,10 @@ Show the current version or commit:
 npm run version:current
 ```
 
-Restore the current version-2.7 clean slate after the `v2.7.0` tag exists:
+Restore the current version-2.8 clean slate after the `v2.8.0` tag exists:
 
 ```powershell
-npm run version:use -- -Version v2.7 -CleanIgnored -Install
+npm run version:use -- -Version v2.8 -CleanIgnored -Install
 ```
 
 Rollback to version 1:
@@ -104,9 +105,9 @@ npm run version:use -- -Latest -Install
 
 | Field | Value |
 |---|---|
-| Current version | `2.7.0` |
+| Current version | `2.8.0` |
 | Active major baseline | `v2.0.0` |
-| Next expected release | `v2.8.0` (interface design change) or `v2.7.1` (patch, if needed) |
+| Next expected release | `v2.9.0` (interface design change) or `v2.8.1` (patch, if needed) |
 
 Version 2 now uses the backend for CSV upload and analysis run status. No LLM API key is
 stored in the browser; provider calls stay behind the backend API boundary.

@@ -6,8 +6,8 @@ documents, and the step-by-step process for releasing a new version.
 The current project version is:
 
 ```text
-package.json version: 2.7.0
-stable Git tag:       v2.7.0 once this release is tagged
+package.json version: 2.8.0
+stable Git tag:       v2.8.0 once this release is tagged
 active baseline:      v2.0.0
 ```
 
