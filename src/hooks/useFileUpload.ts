@@ -6,6 +6,7 @@ import type { ParsedFile } from '../types'
 
 interface UseFileUploadReturn {
   isDragging: boolean
+  isUploading: boolean
   file: ParsedFile | null
   error: string | null
   handleDrop: (event: React.DragEvent) => void
@@ -20,15 +21,18 @@ export function useFileUpload(
 ): UseFileUploadReturn {
   const dispatch = useAppDispatch()
   const [isDragging, setIsDragging] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
   const [file, setFile] = useState<ParsedFile | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   async function processFile(selectedFile: File | undefined): Promise<void> {
-    if (selectedFile === undefined) {
+    if (selectedFile === undefined || isUploading) {
       return
     }
 
     try {
+      setIsUploading(true)
+      setError(null)
       const response = await uploadCsv(selectedFile)
       const parsedFile: ParsedFile = {
         metadata: response.file,
@@ -53,6 +57,8 @@ export function useFileUpload(
           message,
         }),
       )
+    } finally {
+      setIsUploading(false)
     }
   }
 
@@ -84,6 +90,7 @@ export function useFileUpload(
 
   return {
     isDragging,
+    isUploading,
     file,
     error,
     handleDrop,

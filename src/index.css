@@ -62,3 +62,17 @@ progress.progress-gradient::-moz-progress-bar {
   background: linear-gradient(90deg, #4f46e5 0%, #c026d3 100%);
   border-radius: 999px;
 }
+
+.active-progress-rail {
+  animation: active-progress-rail 1.2s ease-in-out infinite;
+}
+
+@keyframes active-progress-rail {
+  0% {
+    transform: translateX(-105%);
+  }
+
+  100% {
+    transform: translateX(205%);
+  }
+}

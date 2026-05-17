@@ -68,6 +68,7 @@ export function RunStep() {
       progress[pipeline.key].status === 'error' || progress[pipeline.key].error !== null,
   )
   const anyError = analysisStatus === 'error' || hasPipelineError
+  const isPreparing = analysisStatus === 'running' && !anyRunning && !allDone && !anyError
 
   let statusLabel: string
   if (anyError) {
@@ -94,6 +95,8 @@ export function RunStep() {
               <AlertTriangle aria-hidden="true" className="h-5 w-5 text-rose-600" />
             ) : allDone ? (
               <CheckCircle2 aria-hidden="true" className="h-5 w-5 text-teal-600" />
+            ) : isPreparing ? (
+              <Loader2 aria-hidden="true" className="h-5 w-5 animate-spin text-brand-600" />
             ) : (
               <Cpu
                 aria-hidden="true"
@@ -116,12 +119,22 @@ export function RunStep() {
         </div>
 
         <div className="mt-4">
-          <progress
-            aria-label="Overall progress"
-            className="progress-gradient h-2 w-full overflow-hidden rounded-full"
-            max={100}
-            value={overall}
-          />
+          {isPreparing ? (
+            <div
+              aria-label="Preparing analysis"
+              className="relative h-2 overflow-hidden rounded-full bg-slate-200"
+              role="progressbar"
+            >
+              <div className="active-progress-rail absolute inset-y-0 w-1/2 rounded-full bg-gradient-brand" />
+            </div>
+          ) : (
+            <progress
+              aria-label="Overall progress"
+              className="progress-gradient h-2 w-full overflow-hidden rounded-full"
+              max={100}
+              value={overall}
+            />
+          )}
         </div>
       </div>
 

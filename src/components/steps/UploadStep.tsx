@@ -132,6 +132,7 @@ export function UploadStep() {
       <FileDropzone
         error={upload.error}
         isDragging={upload.isDragging}
+        isUploading={upload.isUploading}
         onDragLeave={upload.handleDragLeave}
         onDragOver={upload.handleDragOver}
         onDrop={upload.handleDrop}
@@ -158,6 +159,7 @@ export function UploadStep() {
               <p className="mt-1 font-mono font-semibold text-slate-900">{file.rowCount}</p>
             </div>
             <Button
+              disabled={upload.isUploading}
               icon={<RotateCcw aria-hidden="true" className="h-4 w-4" />}
               onClick={upload.clearFile}
               variant="secondary"
@@ -193,7 +195,7 @@ export function UploadStep() {
 
       <div className="flex justify-end">
         <Button
-          disabled={!canContinue}
+          disabled={!canContinue || upload.isUploading}
           icon={<ArrowRight aria-hidden="true" className="h-4 w-4" />}
           onClick={() => dispatch(setStep('configure'))}
         >

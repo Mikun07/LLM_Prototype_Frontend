@@ -1,4 +1,4 @@
-import { Activity, BarChart3, CheckCircle2, FileText, Settings } from 'lucide-react'
+import { Activity, BarChart3, CheckCircle2, FileText, Loader2, Settings } from 'lucide-react'
 import type { WizardStep } from '../../types'
 
 interface WizardStepperProps {
@@ -41,12 +41,20 @@ const stepColours = [
 
 export function WizardStepper({ currentStep }: WizardStepperProps) {
   const activeIndex = steps.findIndex((step) => step.key === currentStep)
+  const progressWidth = `${(Math.max(activeIndex, 0) / (steps.length - 1)) * 100}%`
 
   return (
     <nav
       aria-label="Wizard progress"
       className="relative overflow-hidden rounded-2xl border border-white/80 bg-gradient-to-br from-white via-sky-50/60 to-fuchsia-50/70 p-3 shadow-[0_18px_42px_-30px_rgba(79,70,229,0.55)]"
     >
+      <div className="mb-3 h-1.5 overflow-hidden rounded-full bg-white/70">
+        <div
+          aria-hidden="true"
+          className="h-full rounded-full bg-gradient-brand transition-all duration-500"
+          style={{ width: progressWidth }}
+        />
+      </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {steps.map((step, index) => {
           const Icon = step.icon
@@ -71,11 +79,15 @@ export function WizardStepper({ currentStep }: WizardStepperProps) {
                 <Icon aria-hidden="true" className="h-4 w-4" />
               </div>
               <div className="flex min-w-0 flex-col">
-                <span className="text-xs font-medium opacity-75">Step {index + 1}</span>
+                <span className="text-xs font-medium opacity-75">
+                  {isComplete ? 'Complete' : isActive ? 'In progress' : `Step ${index + 1}`}
+                </span>
                 <span className="truncate font-semibold leading-tight">{step.label}</span>
               </div>
               {isComplete ? (
                 <CheckCircle2 aria-hidden="true" className="ml-auto h-4 w-4 text-teal-500" />
+              ) : isActive ? (
+                <Loader2 aria-hidden="true" className="ml-auto h-4 w-4 animate-spin text-brand-500" />
               ) : null}
             </div>
           )
