@@ -104,6 +104,7 @@ function buildAmbiguityRows(
       type: asType(row),
       label,
       confidence: confidenceFor(index, model),
+      ambiguityType: 'none',
       explanation:
         label === 'SMELL'
           ? 'Interface preview result: this requirement is marked for analyst review.'

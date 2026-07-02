@@ -10,6 +10,8 @@ export type SmellLabel = 'SMELL' | 'CLEAN'
 
 export type ConfidenceLevel = 'HIGH' | 'MEDIUM' | 'LOW'
 
+export type AmbiguityType = 'lexical' | 'syntactic' | 'referential' | 'semantic' | 'none'
+
 export type AgreementStatus = 'AGREE' | 'DISAGREE'
 
 export type PipelineKey =
@@ -103,6 +105,7 @@ export interface AmbiguityResult {
   type: RequirementType
   label: SmellLabel
   confidence: ConfidenceLevel
+  ambiguityType: AmbiguityType
   explanation: string
   suggestion: string
 }

@@ -16,10 +16,15 @@ If you are new to this project, read these documents in order:
 
 | Document | Use it for |
 |---|---|
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Component structure, state design, wizard flow, design decisions |
 | [docs/SETUP.md](docs/SETUP.md) | Installing tools, cloning the repo, installing dependencies, and running the app |
 | [docs/COMMANDS.md](docs/COMMANDS.md) | Understanding every npm, Git, test, build, and version command |
 | [docs/TESTING.md](docs/TESTING.md) | Running checks and understanding what each test command proves |
 | [docs/VERSIONING.md](docs/VERSIONING.md) | The three-tier version model, folder structure, and release process |
+| [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) | Frontend user stories, UI requirements, NFRs, and acceptance criteria |
+| [docs/RISK_ASSESSMENT.md](docs/RISK_ASSESSMENT.md) | Frontend-specific risks with probability, impact, and mitigation |
+| [docs/SECURITY.md](docs/SECURITY.md) | Frontend security scope, attack surface, secure coding requirements |
+| [docs/DEVOPS.md](docs/DEVOPS.md) | Frontend build pipeline, configuration, observability, incident management |
 | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Fixing common setup, npm, Git, Vite, and Windows issues |
 | [docs/versions/index.md](docs/versions/index.md) | Full version history table |
 | [docs/versions/v2/v2.8.0.md](docs/versions/v2/v2.8.0.md) | Full documentation for version 2.8 (current) |
@@ -139,6 +144,39 @@ Full explanation and release process: [docs/VERSIONING.md](docs/VERSIONING.md)
 | `scripts/` | Local helper scripts, including version switching |
 | `dist/` | Generated production build output, ignored by Git |
 | `node_modules/` | Installed dependencies, ignored by Git |
+
+## Key Types
+
+All shared types live in `src/types/index.ts` and mirror the backend Pydantic models.
+Changes to the backend API contract must be reflected here.
+
+**Union types:**
+
+| Type | Values |
+|---|---|
+| `ModelName` | `claude` \| `chatgpt` |
+| `SmellType` | `ambiguity` \| `inconsistency` |
+| `SmellLabel` | `SMELL` \| `CLEAN` |
+| `ConfidenceLevel` | `HIGH` \| `MEDIUM` \| `LOW` |
+| `AmbiguityType` | `lexical` \| `syntactic` \| `referential` \| `semantic` \| `none` |
+| `AgreementStatus` | `AGREE` \| `DISAGREE` |
+| `PipelineStatus` | `queued` \| `running` \| `complete` \| `error` |
+
+**Key interfaces**: `RequirementRow`, `RunConfig`, `AmbiguityResult` (includes `ambiguityType`),
+`InconsistencyResult`, `ModelReport`, `ComparisonReport`, `RunStatusResponse`.
+
+## API Contract
+
+All HTTP calls go through `src/api/client.ts`. The frontend talks to three backend endpoints:
+
+| Method | Path | When |
+|---|---|---|
+| `POST` | `/api/upload` | User drops a CSV file |
+| `POST` | `/api/analyse` | User starts the run |
+| `GET` | `/api/status/{runId}` | Polled every 1 200 ms during the Run step |
+
+`client.ts` normalises error messages before they reach the Redux store. No provider API keys
+are used or stored in the browser.
 
 ## Backend Assumption
 
