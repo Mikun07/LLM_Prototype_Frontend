@@ -12,13 +12,20 @@ const columnAliases = {
   text: ['text', 'requirement', 'requirement text', 'requirement_text'],
   domain: ['domain', 'area', 'module'],
   type: ['type', 'requirement type', 'requirement_type'],
-  project: ['project', 'system', 'product'],
+  project: [
+    'project',
+    'project name',
+    'project id',
+    'group id',
+    'system',
+    'product',
+  ],
 }
 
 type ColumnKey = keyof typeof columnAliases
 
 function normaliseHeader(value: string): string {
-  return value.trim().toLowerCase().replace(/\s+/g, ' ')
+  return value.trim().toLowerCase().replaceAll('_', ' ').replace(/\s+/g, ' ')
 }
 
 function findColumn(headers: string[], key: ColumnKey): string | null {
@@ -144,6 +151,24 @@ export async function parseCsvFile(file: File): Promise<CsvParseResult> {
     return {
       parsedFile: null,
       error: 'The CSV has headers but no requirement rows with text.',
+    }
+  }
+
+  const seenIds = new Set<string>()
+  const duplicateIds = new Set<string>()
+  rows.forEach((row) => {
+    if (seenIds.has(row.id)) {
+      duplicateIds.add(row.id)
+    }
+    seenIds.add(row.id)
+  })
+
+  if (duplicateIds.size > 0) {
+    return {
+      parsedFile: null,
+      error: `Requirement IDs must be unique. Duplicate ID(s): ${Array.from(duplicateIds)
+        .sort()
+        .join(', ')}.`,
     }
   }
 

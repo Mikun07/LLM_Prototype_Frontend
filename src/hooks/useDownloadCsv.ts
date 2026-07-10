@@ -5,8 +5,24 @@ function toText(value: unknown): string {
   return typeof value === 'string' ? value : ''
 }
 
-function escapeCell(value: unknown): string {
-  const text = toText(value)
+export function neutraliseCsvFormula(value: string): string {
+  const trimmedStart = value.trimStart()
+  const firstCharacter = trimmedStart[0]
+
+  if (
+    firstCharacter === '=' ||
+    firstCharacter === '+' ||
+    firstCharacter === '-' ||
+    firstCharacter === '@'
+  ) {
+    return `'${value}`
+  }
+
+  return value
+}
+
+export function escapeCell(value: unknown): string {
+  const text = neutraliseCsvFormula(toText(value))
 
   if (text.includes(',') || text.includes('"') || text.includes('\n')) {
     return `"${text.replaceAll('"', '""')}"`
@@ -15,20 +31,30 @@ function escapeCell(value: unknown): string {
   return text
 }
 
-function download(rows: object[], filename: string): void {
+export function rowsToCsv(rows: object[]): string {
   if (rows.length === 0) {
-    return
+    return ''
   }
 
   const records = rows.map((row) => row as Record<string, unknown>)
   const first = records[0]
-  if (first === undefined) return
+  if (first === undefined) return ''
   const headers = Object.keys(first)
   const lines = [
     headers.join(','),
     ...records.map((row) => headers.map((header) => escapeCell(row[header])).join(',')),
   ]
-  const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' })
+
+  return lines.join('\n')
+}
+
+function download(rows: object[], filename: string): void {
+  const csv = rowsToCsv(rows)
+  if (csv === '') {
+    return
+  }
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url

@@ -41,5 +41,23 @@ describe('parseCsvFile', () => {
     expect(result.error).toBeNull()
     expect(result.parsedFile?.rows[0]?.id).toBe('REQ-001')
   })
-})
 
+  it('detects group_id as the project column', async () => {
+    const result = await parseCsvFile(
+      csvFile('id,text,group_id\nREQ-1,The system shall respond fast,Portal'),
+    )
+
+    expect(result.error).toBeNull()
+    expect(result.parsedFile?.detection.project).toBe(true)
+    expect(result.parsedFile?.rows[0]?.project).toBe('Portal')
+  })
+
+  it('rejects duplicate requirement IDs', async () => {
+    const result = await parseCsvFile(
+      csvFile('id,text\nREQ-1,The system shall respond fast\nREQ-1,The system shall export CSV'),
+    )
+
+    expect(result.parsedFile).toBeNull()
+    expect(result.error).toContain('Duplicate ID(s): REQ-1')
+  })
+})

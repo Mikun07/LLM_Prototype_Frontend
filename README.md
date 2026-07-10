@@ -10,6 +10,13 @@ Recharts, jsPDF, and Vitest.
 are interface design changes built on top of it. Read [docs/VERSIONING.md](docs/VERSIONING.md)
 to understand the three-tier version model.
 
+## Related Repositories
+
+| Repository | Purpose |
+|---|---|
+| [ReqSmell Backend](https://github.com/Mikun07/LLM_Prototype_Backend) | FastAPI API for CSV upload, analysis orchestration, provider calls, and report generation |
+| [ReqSmell Frontend](https://github.com/Mikun07/LLM_Prototype_Frontend) | This React client |
+
 ## Start Here
 
 If you are new to this project, read these documents in order:
@@ -188,3 +195,19 @@ http://localhost:8000
 
 During local development, Vite forwards frontend `/api/*` requests to the backend through
 the proxy configured in `vite.config.ts`.
+
+## Deployment
+
+The repository includes `netlify.toml` for frontend deployment.
+
+| Setting | Value |
+|---|---|
+| Build command | `npm run build` |
+| Publish directory | `dist` |
+| Backend connection | `/api/*` is proxied locally by Vite; production must point to the deployed backend API |
+
+No production frontend URL is documented in this repository yet.
+
+## License
+
+This project uses the MIT License. See [LICENSE](LICENSE).

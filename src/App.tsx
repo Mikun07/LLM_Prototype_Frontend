@@ -22,8 +22,6 @@ export function App() {
               <p className="font-mono text-sm font-bold text-white">Claude &amp; ChatGPT</p>
             </div>
           </div>
-          <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/5" />
-          <div className="pointer-events-none absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-white/5" />
         </header>
 
         <WizardStepper currentStep={currentStep} />
