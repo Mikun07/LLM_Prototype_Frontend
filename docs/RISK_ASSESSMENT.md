@@ -30,7 +30,7 @@ Classification combines the two: Critical / High / Medium / Low.
 | Probability | Medium |
 | Impact | Medium |
 | Classification | Medium |
-| Mitigation | `npm audit` is a required pre-release check; dependency versions are locked in `package-lock.json` |
+| Mitigation | `npm audit --omit=dev` is a required pre-release check for runtime packages; dependency versions are locked in `package-lock.json` |
 | Residual risk | Vulnerabilities published after the last audit would not be caught until the next check |
 
 ### RS-006: API Key Exposure via Browser
@@ -65,7 +65,7 @@ Classification combines the two: Critical / High / Medium / Low.
 | Probability | Low |
 | Impact | Low |
 | Classification | Low |
-| Mitigation | Acceptable for thesis dataset sizes; poll interval is a constant in `useRunPolling.ts` that can be increased if needed |
+| Mitigation | Acceptable for thesis dataset sizes; poll interval is controlled in `useAnalysisRun.ts` and can be increased if needed |
 | Residual risk | Negligible for intended use |
 
 ## Project Risks

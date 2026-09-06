@@ -1,12 +1,12 @@
 # ReqSmell Frontend
 
-Version 2.8 of the ReqSmell frontend.
+Version 2.9 of the ReqSmell frontend.
 
 This repository contains the web client for the ReqSmell requirements smell detection
 prototype. It is built with React, TypeScript, Vite, Redux Toolkit, Tailwind CSS,
 Recharts, jsPDF, and Vitest.
 
-`v2.0.0` is the frozen major baseline (first complete interface). `v2.1.0`-`v2.8.0`
+`v2.0.0` is the frozen major baseline (first complete interface). `v2.1.0`-`v2.9.0`
 are interface design changes built on top of it. Read [docs/VERSIONING.md](docs/VERSIONING.md)
 to understand the three-tier version model.
 
@@ -34,7 +34,8 @@ If you are new to this project, read these documents in order:
 | [docs/DEVOPS.md](docs/DEVOPS.md) | Frontend build pipeline, configuration, observability, incident management |
 | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Fixing common setup, npm, Git, Vite, and Windows issues |
 | [docs/versions/index.md](docs/versions/index.md) | Full version history table |
-| [docs/versions/v2/v2.8.0.md](docs/versions/v2/v2.8.0.md) | Full documentation for version 2.8 (current) |
+| [docs/versions/v2/v2.9.0.md](docs/versions/v2/v2.9.0.md) | Full documentation for version 2.9 (current) |
+| [docs/versions/v2/v2.8.0.md](docs/versions/v2/v2.8.0.md) | Full documentation for version 2.8 |
 | [docs/versions/v2/v2.7.0.md](docs/versions/v2/v2.7.0.md) | Full documentation for version 2.7 |
 | [docs/versions/v2/v2.6.0.md](docs/versions/v2/v2.6.0.md) | Full documentation for version 2.6 |
 | [docs/versions/v2/v2.5.0.md](docs/versions/v2/v2.5.0.md) | Full documentation for version 2.5 |
@@ -75,11 +76,12 @@ Run these commands before making a pull request or creating a new version:
 npm run type-check
 npm run lint
 npm run test -- --run
-npm audit
+npm audit --omit=dev
 npm run build
+npm run version:check
 ```
 
-All five should pass for a clean version-2 interface.
+All six should pass for a clean version-2 interface.
 
 ## Version Commands
 
@@ -95,10 +97,10 @@ Show the current version or commit:
 npm run version:current
 ```
 
-Restore the current version-2.8 clean slate after the `v2.8.0` tag exists:
+Restore the current version-2.9 clean slate after the `v2.9.0` tag exists:
 
 ```powershell
-npm run version:use -- -Version v2.8 -CleanIgnored -Install
+npm run version:use -- -Version v2.9 -CleanIgnored -Install
 ```
 
 Rollback to version 1:
@@ -117,9 +119,9 @@ npm run version:use -- -Latest -Install
 
 | Field | Value |
 |---|---|
-| Current version | `2.8.0` |
+| Current version | `2.9.0` |
 | Active major baseline | `v2.0.0` |
-| Next expected release | `v2.9.0` (interface design change) or `v2.8.1` (patch, if needed) |
+| Next expected release | `v2.10.0` (interface design change) or `v2.9.1` (patch, if needed) |
 
 Version 2 now uses the backend for CSV upload and analysis run status. No LLM API key is
 stored in the browser; provider calls stay behind the backend API boundary.
@@ -167,27 +169,30 @@ Changes to the backend API contract must be reflected here.
 | `ConfidenceLevel` | `HIGH` \| `MEDIUM` \| `LOW` |
 | `AmbiguityType` | `lexical` \| `syntactic` \| `referential` \| `semantic` \| `none` |
 | `AgreementStatus` | `AGREE` \| `DISAGREE` |
-| `PipelineStatus` | `queued` \| `running` \| `complete` \| `error` |
+| `PipelineStatus` | `queued` \| `running` \| `complete` \| `error` \| `cancelled` |
+| `RunStatus` | `running` \| `complete` \| `error` \| `cancelled` |
 
 **Key interfaces**: `RequirementRow`, `RunConfig`, `AmbiguityResult` (includes `ambiguityType`),
-`InconsistencyResult`, `ModelReport`, `ComparisonReport`, `RunStatusResponse`.
+`InconsistencyResult` (includes `project`), `ModelReport`, `ComparisonReport`,
+`RunStatusResponse`.
 
 ## API Contract
 
-All HTTP calls go through `src/api/client.ts`. The frontend talks to three backend endpoints:
+All HTTP calls go through `src/api/client.ts`. The frontend talks to four backend endpoints:
 
 | Method | Path | When |
 |---|---|---|
 | `POST` | `/api/upload` | User drops a CSV file |
 | `POST` | `/api/analyse` | User starts the run |
 | `GET` | `/api/status/{runId}` | Polled every 1 200 ms during the Run step |
+| `POST` | `/api/cancel/{runId}` | User cancels a running analysis |
 
 `client.ts` normalises error messages before they reach the Redux store. No provider API keys
 are used or stored in the browser.
 
 ## Backend Assumption
 
-The frontend API boundary expects the backend API to be available at:
+The frontend API boundary expects ReqSmell Backend `v1.3.0` or later to be available at:
 
 ```text
 http://localhost:8000

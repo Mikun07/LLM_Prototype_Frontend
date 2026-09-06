@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import {
+  cancelAnalysis,
   getApiErrorMessage,
   getReadableRunErrorMessage,
   getRunStatus,
@@ -35,7 +36,8 @@ function progressFor(
 export function useAnalysisRun(): UseAnalysisRunReturn {
   const dispatch = useAppDispatch()
   const { requirements, file, config } = useAppSelector((state) => state.wizard)
-  const isRunning = useAppSelector((state) => state.analysis.status === 'running')
+  const { runId: activeRunId, status } = useAppSelector((state) => state.analysis)
+  const isRunning = status === 'running'
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const cancelledRef = useRef(false)
   const [localRunning, setLocalRunning] = useState(false)
@@ -86,6 +88,20 @@ export function useAnalysisRun(): UseAnalysisRunReturn {
       : getReadableRunErrorMessage(errors[0])
   }
 
+  async function cancelBackendRun(runId: string): Promise<void> {
+    try {
+      await cancelAnalysis(runId)
+    } catch (error) {
+      dispatch(
+        addToast({
+          tone: 'warning',
+          title: 'Cancel warning',
+          message: getApiErrorMessage(error),
+        }),
+      )
+    }
+  }
+
   async function pollRun(runId: string): Promise<void> {
     while (!cancelledRef.current) {
       const response = await getRunStatus(runId)
@@ -101,6 +117,12 @@ export function useAnalysisRun(): UseAnalysisRunReturn {
           }),
         )
         dispatch(setStep('dashboard'))
+        return
+      }
+
+      if (response.status === 'cancelled') {
+        dispatch(resetRun())
+        dispatch(setStep('configure'))
         return
       }
 
@@ -154,6 +176,8 @@ export function useAnalysisRun(): UseAnalysisRunReturn {
       if (!cancelledRef.current) {
         dispatch(startRun({ runId: started.runId }))
         await pollRun(started.runId)
+      } else {
+        await cancelBackendRun(started.runId)
       }
     } catch (error) {
       if (!cancelledRef.current) {
@@ -182,6 +206,9 @@ export function useAnalysisRun(): UseAnalysisRunReturn {
     if (timeoutRef.current !== null) {
       globalThis.clearTimeout(timeoutRef.current)
       timeoutRef.current = null
+    }
+    if (activeRunId !== null) {
+      void cancelBackendRun(activeRunId)
     }
     setLocalRunning(false)
     dispatch(resetRun())

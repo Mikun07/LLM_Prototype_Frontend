@@ -20,9 +20,9 @@ export type PipelineKey =
   | 'chatgptAmbiguity'
   | 'chatgptInconsistency'
 
-export type PipelineStatus = 'queued' | 'running' | 'complete' | 'error'
+export type PipelineStatus = 'queued' | 'running' | 'complete' | 'error' | 'cancelled'
 
-export type RunStatus = 'running' | 'complete' | 'error'
+export type RunStatus = 'running' | 'complete' | 'error' | 'cancelled'
 
 export interface FileMetadata {
   name: string
@@ -116,6 +116,7 @@ export interface InconsistencyResult {
   reqAText: string
   reqBText: string
   domain: string
+  project: string
   label: SmellLabel
   confidence: ConfidenceLevel
   explanation: string

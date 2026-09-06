@@ -10,6 +10,7 @@ The frontend is the researcher's primary interface for:
 - Uploading a requirements CSV
 - Configuring which models and smell types to run
 - Monitoring pipeline progress in real time
+- Cancelling an unwanted or long-running analysis
 - Reviewing per-requirement classifications and model comparisons
 - Exporting results to CSV and PDF
 
@@ -44,6 +45,7 @@ It communicates with the FastAPI backend over `localhost:8000` via a Vite dev pr
 | US-001 | As a researcher, I want to upload a CSV file of requirements so that the system can analyse them |
 | US-002 | As a researcher, I want to select which models and smell types to run so that I can control the analysis scope |
 | US-003 | As a researcher, I want to see real-time progress during analysis so that I know the system is working |
+| US-010 | As a researcher, I want to cancel a running analysis so that I can stop unwanted work |
 | US-004 | As a researcher, I want to see per-requirement smell classifications so that I can assess LLM detection accuracy |
 | US-005 | As a researcher, I want to compare Claude and ChatGPT results side by side so that I can evaluate inter-model agreement |
 | US-006 | As a researcher, I want to export results to CSV so that I can use them in further analysis |
@@ -58,7 +60,7 @@ It communicates with the FastAPI backend over `localhost:8000` via a Vite dev pr
 
 ## Functional Requirements (Frontend)
 
-Requirements FR-001 to FR-014 and FR-017 are implemented in the backend. The frontend
+Requirements FR-001 to FR-014, FR-017, and FR-018 are implemented in the backend. The frontend
 drives them through the wizard UI. The two requirements below are implemented entirely
 in the frontend.
 
@@ -74,12 +76,13 @@ fulfil the user stories above.
 
 | UI requirement | Implemented in |
 |---|---|
-| Wizard-based upload step with column detection preview | `UploadStep.tsx`, `uploadSlice.ts` |
-| Configuration step for model and smell type selection | `ConfigStep.tsx`, `configSlice.ts` |
-| Real-time progress display for each pipeline independently | `RunStep.tsx`, `useRunPolling.ts` |
-| Per-requirement results table with label, confidence, type, and explanation | `ResultsTable.tsx`, `ReportStep.tsx` |
+| Wizard-based upload step with column detection preview | `UploadStep.tsx`, `wizardSlice.ts` |
+| Configuration step for model and smell type selection | `ConfigureStep.tsx`, `wizardSlice.ts` |
+| Real-time progress display for each pipeline independently | `RunStep.tsx`, `useAnalysisRun.ts` |
+| Cancel button that calls the backend cancel endpoint | `RunStep.tsx`, `useAnalysisRun.ts`, `client.ts` |
+| Per-requirement results table with label, confidence, type, and explanation | `ModelReport.tsx`, `ResultsSection.tsx`, `DataTable.tsx` |
 | Side-by-side model comparison view | `ComparisonReport.tsx` |
-| Toast notifications for API errors | `ToastContainer.tsx`, `toastSlice.ts` |
+| Toast notifications for API errors | `ToastViewport.tsx`, `toastSlice.ts` |
 
 ## Non-Functional Requirements (Frontend)
 
@@ -88,6 +91,7 @@ fulfil the user stories above.
 | ID | Requirement |
 |---|---|
 | NFR-002 | The frontend shall reflect pipeline progress within 2 seconds of a state change on the backend |
+| NFR-015 | The frontend shall send a cancellation request to the backend when cancelling an active backend run |
 
 ### Maintainability
 
@@ -107,7 +111,7 @@ fulfil the user stories above.
 
 | Priority | Requirements |
 |---|---|
-| Must have | FR-015, FR-016, NFR-002, NFR-014 |
+| Must have | FR-015, FR-016, NFR-002, NFR-014, NFR-015 |
 | Should have | NFR-008, NFR-009, NFR-013 |
 | Could have | PDF export polish, grouped chart variants, animated progress bars |
 | Will not have (this version) | Authentication UI, user account management, saved run history UI |
@@ -120,13 +124,15 @@ fulfil the user stories above.
 | FR-016 | Given analysis results are available, when the researcher clicks export PDF, then a formatted report is downloaded |
 | NFR-002 | Given a pipeline status changes on the backend, when the frontend next polls, then the progress display updates within 2 seconds |
 | NFR-014 | Given an API error occurs, when the error reaches the UI, then a toast message describes the problem in plain language without exposing internal error details |
+| NFR-015 | Given a backend run ID exists, when the researcher cancels the run, then the frontend calls `POST /api/cancel/{runId}` and returns to Configure |
 
 ## Traceability Summary
 
 | Stakeholder need | User story | Requirement | Covered by |
 |---|---|---|---|
-| Review results | US-004 | FR-015, UI requirements | `ResultsTable.tsx`, `ReportStep.tsx` |
+| Review results | US-004 | FR-015, UI requirements | `ModelReport.tsx`, `ResultsSection.tsx` |
 | Compare models | US-005 | UI requirements | `ComparisonReport.tsx` |
 | Export results | US-006, US-007 | FR-015, FR-016 | `useDownloadCsv.ts`, `reportPdf.ts` |
-| Real-time progress | US-003 | NFR-002 | `useRunPolling.ts`, `RunStep.tsx` |
+| Real-time progress | US-003 | NFR-002 | `useAnalysisRun.ts`, `RunStep.tsx` |
+| Cancel run | US-010 | NFR-015 | `useAnalysisRun.ts`, `client.ts`, `RunStep.tsx` |
 | Plain-language errors | US-003 to US-007 | NFR-014 | `src/api/client.ts`, `toastSlice.ts` |

@@ -500,7 +500,7 @@ function inconsistencyToReviewItem(row: InconsistencyResult): ReviewItem | null 
   return {
     id: `${row.reqAId} / ${row.reqBId}`,
     check: 'Inconsistency',
-    domain: row.domain,
+    domain: `${row.project} | ${row.domain}`,
     requirement: `${row.reqAId}: ${row.reqAText}\n${row.reqBId}: ${row.reqBText}`,
     reason: row.explanation,
     suggestion: row.suggestion,

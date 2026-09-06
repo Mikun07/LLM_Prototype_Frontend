@@ -66,6 +66,8 @@ const inconsistencyColumns: DataTableColumn<InconsistencyResult>[] = [
     ),
     sortableValue: (row) => row.reqAText,
   },
+  { key: 'domain', header: 'Domain', render: (row) => row.domain, sortableValue: (row) => row.domain },
+  { key: 'project', header: 'Project', render: (row) => row.project, sortableValue: (row) => row.project },
   { key: 'label', header: 'Result', render: (row) => <Badge value={row.label} />, sortableValue: (row) => row.label },
   { key: 'explanation', header: 'Reason', render: (row) => row.explanation, sortableValue: (row) => row.explanation },
   {
@@ -114,10 +116,10 @@ export function ModelReport({ report }: ModelReportProps) {
       <ResultsSection
         columns={inconsistencyColumns}
         filename={`reqsmell-${report.model}-inconsistency.csv`}
-        filterKeys={['label', 'domain']}
+        filterKeys={['label', 'domain', 'project']}
         getRowKey={(row, index) => `${row.reqAId}-${row.reqBId}-${index}`}
         rows={report.inconsistencyResults}
-        searchFields={['reqAText', 'reqBText', 'explanation']}
+        searchFields={['reqAText', 'reqBText', 'explanation', 'project']}
         title="Inconsistency checks"
       />
     </section>

@@ -154,6 +154,12 @@ export async function startAnalysis(payload: AnalyseRequest): Promise<StartRunRe
   return response.data
 }
 
+export async function cancelAnalysis(runId: string): Promise<RunStatusResponse> {
+  const response = await api.post<RunStatusResponse>(`/cancel/${runId}`)
+
+  return response.data
+}
+
 export async function getRunStatus(
   runId: string,
 ): Promise<RunStatusResponse> {

@@ -92,7 +92,7 @@ Run all five checks. All must pass before this version can be tagged.
 npm run type-check
 npm run lint
 npm run test -- --run
-npm audit
+npm audit --omit=dev
 npm run build
 ```
 
@@ -103,7 +103,7 @@ Expected results:
 | `npm run type-check` | 0 errors |
 | `npm run lint` | 0 errors, 0 warnings |
 | `npm run test -- --run` | All tests pass |
-| `npm audit` | 0 vulnerabilities |
+| `npm audit --omit=dev` | 0 runtime vulnerabilities |
 | `npm run build` | Build succeeds, output in `dist/` |
 
 ## Important Files

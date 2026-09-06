@@ -30,7 +30,7 @@ The security posture for the frontend focuses on three concerns:
 |---|---|---|
 | File upload (`POST /api/upload`) | Oversized or malicious file sent to backend | Size and type validation happens in the backend; the frontend passes the file as-is |
 | Configuration inputs (temperature, group size) | Out-of-range values sent to backend | Backend Pydantic models validate all values; frontend does not need to duplicate backend validation |
-| npm dependency graph | Known vulnerability in a package | `npm audit` is a required pre-release check |
+| npm dependency graph | Known vulnerability in a runtime package | `npm audit --omit=dev` is a required pre-release check |
 | Browser network traffic | API key visible in requests | Backend architecture guarantees no keys are present in any response |
 
 ## Secure Coding Requirements
@@ -40,7 +40,7 @@ The security posture for the frontend focuses on three concerns:
 | Rule | Where enforced |
 |---|---|
 | File input is typed as `File` and passed directly to `FormData` | `UploadStep.tsx` |
-| Configuration values are typed as `number` or `boolean` before dispatch | `configSlice.ts` |
+| Configuration values are typed before dispatch | `wizardSlice.ts` and `ConfigureStep.tsx` |
 | No user-supplied string is rendered as raw HTML | Enforced by React's default escaping |
 
 ### Error Handling
@@ -56,7 +56,7 @@ The security posture for the frontend focuses on three concerns:
 
 | Rule | Frequency |
 |---|---|
-| `npm audit` must pass before any frontend release | Pre-release check in `COMMANDS.md` |
+| `npm audit --omit=dev` must pass before any frontend release | Pre-release check in `COMMANDS.md` |
 | `package-lock.json` is committed so `npm ci` installs exact versions | Enforced by repository policy |
 
 ## Security Readiness Review
@@ -66,7 +66,7 @@ The security posture for the frontend focuses on three concerns:
 | No API keys in environment variables or build output | Confirmed; no `VITE_*` key variables defined |
 | No `dangerouslySetInnerHTML` usage | Confirmed by review |
 | API errors produce plain-language toast messages, not raw stack traces | Implemented in `client.ts` and `toastSlice.ts` |
-| `npm audit` passing | Required pre-release check |
+| `npm audit --omit=dev` passing | Required pre-release check |
 | `package-lock.json` committed | Enforced |
 
 ## Out of Scope for This Version

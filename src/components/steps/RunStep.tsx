@@ -28,6 +28,10 @@ function StatusIcon({ status }: { readonly status: string }) {
     return <AlertTriangle aria-hidden="true" className="h-5 w-5 text-rose-500" />
   }
 
+  if (status === 'cancelled') {
+    return <X aria-hidden="true" className="h-5 w-5 text-slate-500" />
+  }
+
   if (status === 'running') {
     return <Loader2 aria-hidden="true" className="h-5 w-5 animate-spin text-brand-500" />
   }

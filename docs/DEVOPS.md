@@ -43,22 +43,24 @@ When a deployment is added in a future version, it should address:
 
 ## Build Pipeline
 
-No CI/CD pipeline is configured. All checks run locally before commits.
+GitHub Actions runs frontend quality, test, and build jobs for pushes and pull requests
+to `main` and `develop`. The same checks should also be run locally before commits.
 
 ### Frontend Quality Gate
 
-All five commands must pass before committing or releasing:
+All six commands must pass before committing or releasing:
 
 | Command | What it checks |
 |---|---|
 | `npm run type-check` | TypeScript strict mode |
 | `npm run lint` | ESLint rules |
 | `npm run test -- --run` | Vitest unit tests |
-| `npm audit` | Dependency vulnerabilities |
+| `npm audit --omit=dev` | Runtime dependency vulnerabilities |
 | `npm run build` | Production build success |
+| `npm run version:check` | Version document and index consistency |
 
-If a future CI/CD pipeline is added (such as GitHub Actions), these same commands
-should form the pipeline steps.
+The current CI workflow runs lint, type-check, tests, and build. Runtime audit and
+version documentation checks are required local release checks.
 
 ## Configuration Management
 

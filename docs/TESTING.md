@@ -1,6 +1,6 @@
 # Testing And Verification Guide
 
-This guide explains how to prove the version-1 frontend environment is healthy.
+This guide explains how to prove the current frontend environment is healthy.
 
 ## Test Philosophy
 
@@ -16,7 +16,7 @@ As features are added, tests should grow in these areas:
 | Redux slices | Wizard state, analysis run state, pipeline progress |
 | Hooks | File upload, polling, filtering, sorting, pagination |
 | Components | Upload step, run step, dashboard reports, tables |
-| API layer | Mocked upload, start analysis, status polling |
+| API layer | Mocked upload, start analysis, status polling, cancellation |
 
 ## Run All Required Checks
 
@@ -26,8 +26,9 @@ Use this command set before committing, pushing, or creating a new version:
 npm run type-check
 npm run lint
 npm run test -- --run
-npm audit
+npm audit --omit=dev
 npm run build
+npm run version:check
 ```
 
 ## Type Checking
@@ -102,8 +103,8 @@ mode.
 Expected result:
 
 ```text
-Test Files  1 passed
-Tests       2 passed
+Test Files  pass
+Tests       pass
 ```
 
 The exact number will increase as the app grows.
@@ -113,14 +114,14 @@ The exact number will increase as the app grows.
 Command:
 
 ```powershell
-npm audit
+npm audit --omit=dev
 ```
 
 What it does:
 
 | Result | Meaning |
 |---|---|
-| `found 0 vulnerabilities` | Dependency tree is clean |
+| `found 0 vulnerabilities` | Runtime dependency tree is clean |
 | Moderate, high, or critical findings | A dependency should be upgraded or reviewed |
 
 Version 2 currently expects:

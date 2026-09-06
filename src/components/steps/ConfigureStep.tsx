@@ -119,7 +119,7 @@ export function ConfigureStep() {
         </div>
         {smellTypesAutoDetected ? (
           <p className="mt-1 text-sm text-slate-500">
-            Your file includes a <span className="font-semibold text-slate-700">Type</span> column the system will use it to route each requirement automatically. You can still restrict analysis here.
+            Your file includes a <span className="font-semibold text-slate-700">Type</span> column. The dashboard will use it for filtering and summaries. Choose which checks to run here.
           </p>
         ) : (
           <p className="mt-1 text-sm text-slate-500">Select which kinds of problems the AI should look for. You can run both at once.</p>

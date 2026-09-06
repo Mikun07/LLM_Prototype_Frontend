@@ -60,6 +60,10 @@ function asType(row: RequirementRow): RequirementType {
   return row.type ?? 'UNKNOWN'
 }
 
+function asProject(row: RequirementRow): string {
+  return row.project?.trim() || 'Default'
+}
+
 function percentage(part: number, total: number): number {
   return total === 0 ? 0 : Number(((part / total) * 100).toFixed(1))
 }
@@ -131,6 +135,7 @@ function buildInconsistencyRows(
       reqAText: row.text,
       reqBText: next.text,
       domain: asDomain(row),
+      project: asProject(row),
       label,
       confidence: confidenceFor(index + 1, model),
       explanation:
@@ -276,4 +281,3 @@ export function buildInterfaceReports(
     },
   }
 }
-

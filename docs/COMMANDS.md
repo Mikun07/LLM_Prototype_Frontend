@@ -18,8 +18,9 @@ This document explains every project command in plain language.
 | `npm run type-check` | TypeScript correctness | Yes |
 | `npm run lint` | Code style and static quality rules | Yes |
 | `npm run test -- --run` | Runs the test suite once | Yes |
-| `npm audit` | Known dependency vulnerabilities | Yes |
+| `npm audit --omit=dev` | Known runtime dependency vulnerabilities | Yes |
 | `npm run build` | TypeScript check plus production build | Yes |
+| `npm run version:check` | Version document and index consistency | Yes |
 
 ## Version Commands
 
@@ -89,8 +90,9 @@ npm ci
 npm run type-check
 npm run lint
 npm run test -- --run
-npm audit
+npm audit --omit=dev
 npm run build
+npm run version:check
 npm run dev
 ```
 

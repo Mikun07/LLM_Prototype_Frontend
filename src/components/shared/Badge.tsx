@@ -24,7 +24,7 @@ function badgeClasses(value: BadgeValue): string {
     return 'bg-amber-100 text-amber-900 ring-1 ring-amber-200'
   }
 
-  if (value === 'LOW' || value === 'queued') {
+  if (value === 'LOW' || value === 'queued' || value === 'cancelled') {
     return 'bg-slate-200 text-slate-700'
   }
 
@@ -58,6 +58,10 @@ function badgeLabel(value: BadgeValue): string {
 
   if (value === 'DISAGREE') {
     return 'Different'
+  }
+
+  if (value === 'cancelled') {
+    return 'Cancelled'
   }
 
   return String(value)

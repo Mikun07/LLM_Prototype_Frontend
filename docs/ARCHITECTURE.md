@@ -112,13 +112,15 @@ Report rendering components used inside `DashboardStep`.
 
 ### 5. API Client
 
-`src/api/client.ts` is the only file that makes HTTP calls. It exports three functions.
+`src/api/client.ts` is the only file that makes HTTP calls. It exports four request
+functions.
 
 | Function | Calls | Returns |
 |---|---|---|
 | `uploadCsv(file)` | `POST /api/upload` | `UploadResponse` |
 | `startAnalysis(request)` | `POST /api/analyse` | `StartRunResponse` |
 | `getRunStatus(runId)` | `GET /api/status/{runId}` | `RunStatusResponse` |
+| `cancelAnalysis(runId)` | `POST /api/cancel/{runId}` | `RunStatusResponse` |
 
 Error messages are normalised here before reaching the store. Components and hooks never
 construct API URLs directly.
@@ -136,7 +138,7 @@ upload -> configure -> run -> dashboard
 |---|---|---|
 | `upload` | Always available | File uploaded and parsed successfully |
 | `configure` | File uploaded | Configuration reviewed checkbox ticked |
-| `run` | At least one model and smell type selected | Run reaches `complete` or `error` status |
+| `run` | At least one model and smell type selected | Run reaches `complete`, `error`, or `cancelled` status |
 | `dashboard` | Run complete | User navigates manually; "Start New Run" resets to `upload` |
 
 The `wizard` slice owns the current step. Hooks call `dispatch(setStep(...))` to advance.
@@ -150,6 +152,8 @@ During the `run` step, `useAnalysisRun` polls `GET /api/status/{runId}` every 1 
 | Response received | Dispatch progress updates for all pipelines |
 | Status becomes `complete` | Stop polling; dispatch final reports; advance to `dashboard` |
 | Status becomes `error` | Stop polling; dispatch error; show error state on Run step |
+| Status becomes `cancelled` | Stop polling; reset run state; return to Configure |
+| User clicks Cancel | Call `POST /api/cancel/{runId}` when a backend run exists |
 | HTTP error | Increment error counter; stop polling after threshold |
 
 The interval is cleared on component unmount to prevent state updates on unmounted trees.
@@ -164,7 +168,7 @@ Key types:
 | Type | Kind | Used by |
 |---|---|---|
 | `AmbiguityResult` | Interface | Results tables, model report |
-| `InconsistencyResult` | Interface | Results tables, model report |
+| `InconsistencyResult` | Interface | Results tables, model report, PDF export; includes project context |
 | `ModelReport` | Interface | Dashboard step, PDF export |
 | `ComparisonReport` | Interface | Comparison tab, PDF export |
 | `RunStatusResponse` | Interface | Polling hook, analysis slice |

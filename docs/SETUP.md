@@ -185,8 +185,8 @@ to:
 http://localhost:8000/api/*
 ```
 
-If the backend is not running, the starter page still opens, but real API workflows will
-fail once those features are implemented.
+If the backend is not running, the starter page still opens, but upload, analysis,
+polling, and cancellation workflows will fail.
 
 ## First-Time Verification
 
@@ -196,7 +196,7 @@ After installing dependencies, run:
 npm run type-check
 npm run lint
 npm run test -- --run
-npm audit
+npm audit --omit=dev
 npm run build
 ```
 
@@ -207,7 +207,7 @@ Expected result:
 | `npm run type-check` | No TypeScript errors |
 | `npm run lint` | No ESLint errors |
 | `npm run test -- --run` | All Vitest tests pass |
-| `npm audit` | `found 0 vulnerabilities` |
+| `npm audit --omit=dev` | `found 0 vulnerabilities` |
 | `npm run build` | Vite creates `dist/` successfully |
 
 ## Clean Local Setup

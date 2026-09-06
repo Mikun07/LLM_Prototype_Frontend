@@ -6,8 +6,8 @@ documents, and the step-by-step process for releasing a new version.
 The current project version is:
 
 ```text
-package.json version: 2.8.0
-stable Git tag:       v2.8.0 once this release is tagged
+package.json version: 2.9.0
+stable Git tag:       v2.9.0 once this release is tagged
 active baseline:      v2.0.0
 ```
 
@@ -67,6 +67,7 @@ docs/versions/
     v2.2.0.md
     v2.3.0.md
     v2.4.0.md       ← added when v2.4.0 is released
+    v2.9.0.md       <- current v2 release document
   v3/               ← created when v3.0.0 is released
     v3.0.0.md
 ```
@@ -244,14 +245,15 @@ Update any version references in `README.md` to point to the new version.
 
 ### 10. Run all checks
 
-All five must pass with zero errors and zero warnings:
+All six must pass with zero errors and zero warnings:
 
 ```powershell
 npm run type-check
 npm run lint
 npm run test -- --run
-npm audit
+npm audit --omit=dev
 npm run build
+npm run version:check
 ```
 
 ### 11. Commit
@@ -331,7 +333,7 @@ Every version document must include these sections:
 | What is not included | Missing features and which future version will address them |
 | Required software | Versions and check commands |
 | First-time setup | Clone, install, and run commands |
-| Verify | All five check commands and expected results |
+| Verify | All six check commands and expected results |
 | Important files | Key files a new developer should read |
 | Restore | How to return to exactly this version |
 | Dependency notes | Any changed or notable packages |

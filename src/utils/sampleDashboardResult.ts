@@ -125,6 +125,7 @@ interface PairSample {
   reqAId: string
   reqBId: string
   domain: string
+  project: string
   label: SmellLabel
   confidence: ConfidenceLevel
   explanation: string
@@ -262,6 +263,7 @@ const claudeInconsistencySamples: PairSample[] = [
     reqAId: 'R2',
     reqBId: 'R3',
     domain: 'Access Control',
+    project: 'Requirement Result Preview',
     label: 'SMELL',
     confidence: 'HIGH',
     explanation: 'R2 assigns new-user authentication to admins while R3 says new users authenticate themselves.',
@@ -271,6 +273,7 @@ const claudeInconsistencySamples: PairSample[] = [
     reqAId: 'R4',
     reqBId: 'R5',
     domain: 'Reporting',
+    project: 'Requirement Result Preview',
     label: 'CLEAN',
     confidence: 'MEDIUM',
     explanation: 'Data generation and report generation can be separate capabilities.',
@@ -280,6 +283,7 @@ const claudeInconsistencySamples: PairSample[] = [
     reqAId: 'R10',
     reqBId: 'R11',
     domain: 'Transactions',
+    project: 'Requirement Result Preview',
     label: 'SMELL',
     confidence: 'MEDIUM',
     explanation: 'R10 says transactions are created automatically, while R11 narrows the trigger to after order placement.',
@@ -294,6 +298,7 @@ const chatgptInconsistencySamples: PairSample[] = [
     reqAId: 'R10',
     reqBId: 'R11',
     domain: 'Transactions',
+    project: 'Requirement Result Preview',
     label: 'CLEAN',
     confidence: 'MEDIUM',
     explanation: 'This result treats R11 as a clarification of the automatic behavior in R10.',
@@ -378,6 +383,7 @@ function buildInconsistencyRows(samples: readonly PairSample[]): InconsistencyRe
       reqAText: first.text,
       reqBText: second.text,
       domain: sample.domain,
+      project: sample.project,
       label: sample.label,
       confidence: sample.confidence,
       explanation: sample.explanation,
